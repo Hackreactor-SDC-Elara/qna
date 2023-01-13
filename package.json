@@ -1,0 +1,23 @@
+{
+  "name": "qna",
+  "version": "1.0.0",
+  "description": "This is the back end storage and server for the questions and answers service",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Hackreactor-SDC-Elara/qna.git"
+  },
+  "author": "Justin8912",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Hackreactor-SDC-Elara/qna/issues"
+  },
+  "homepage": "https://github.com/Hackreactor-SDC-Elara/qna#readme",
+  "dependencies": {
+    "express": "^4.18.2",
+    "jest": "^29.3.1"
+  }
+}
