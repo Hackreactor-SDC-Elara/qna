@@ -1,4 +1,8 @@
 -- Keeping this here for testing, but should remove later
+-- Adding to tables I will need to follow this order
+-- For questions: 1. Users, 2. Questions
+-- For answers: 1. Users, 2. Answer, 3. Photos
+
 DROP TABLE if exists photos;
 DROP TABLE if exists answers;
 DROP TABLE if exists questions;
@@ -13,6 +17,7 @@ CREATE TABLE if not exists users (
 
 CREATE TABLE if not exists questions (
   question_id SERIAL PRIMARY KEY,
+  product_id VARCHAR(7),
   body VARCHAR(1000),
   date DATE,
   helpfulness SMALLINT,
