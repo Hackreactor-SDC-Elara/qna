@@ -8,16 +8,14 @@ const client = new Client ({
   port: 5432
 });
 
-client.connect((err) => {
+client.connect(err => {
   if (err) {
-    console.log(`There was an error when trying to connect to the database ${err}`);
+    console.log(`There was an error when trying to connect with the db ${err}`);
   } else {
-    console.log('Successfully connected to the database');
-    client.query('SELECT * FROM questions')
-      .then(data => {
-        console.log('Yo, here is some data!', data);
-      })
+    return client;
   }
-});
+})
 
-module.export = client
+module.exports = {
+  client: client
+}
