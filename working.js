@@ -1,5 +1,7 @@
 const fs = require('fs');
-const {parse} = require('csv-parse')
+const {parse} = require('csv-parse');
+const {client} = require('./server/connectToDb.js');
+
 
 // For reference, here is the data from the csvs
   // Answers.csv: [id, question_id, body, date_written, user_name, user_email, reported, helpful]
@@ -18,10 +20,18 @@ const {parse} = require('csv-parse')
   // use id to the question.answer query
   // Everything else if very straight forward!
 
-let newObj = fs.createWriteStream('./input_data/myTest.csv');
-fs.createReadStream('./input_data/answers.csv')
+  let newObj = fs.createWriteStream('./input_data/myTest.csv');
+  fs.createReadStream('./input_data/answers.csv')
+  .on('error', (err) => {
+    console.log(`There was an error: `, err);
+  })
   .pipe(parse({delimiter: ','}))
   .on('data', (row) => {
-    console.log(row);
+    // console.log(row);
+    client.query(`SELECT * FROM users WHERE name=${row[4]} and email=${row[5]}`)
+      .then(result => {
+        console.log('User has been or not been found: ', result);
+
+      })
     newObj.write(row.join(',') + '\n', 'utf-8')
   })
