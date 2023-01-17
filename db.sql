@@ -35,6 +35,7 @@ CREATE TABLE if not exists answers (
   date DATE,
   user_id SMALLINT,
   helpfulness SMALLINT,
+  reported BIT(1),
   CONSTRAINT fk_question
     FOREIGN KEY (question_id)
       REFERENCES questions(question_id),
