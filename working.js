@@ -21,17 +21,30 @@ const {client} = require('./server/connectToDb.js');
   // Everything else if very straight forward!
 
   let newObj = fs.createWriteStream('./input_data/myTest.csv');
-  fs.createReadStream('./input_data/answers.csv')
+  let stream = fs.createReadStream('./input_data/answers.csv')
+  .pipe(parse({delimiter: ','}))
   .on('error', (err) => {
     console.log(`There was an error: `, err);
+    return;
   })
-  .pipe(parse({delimiter: ','}))
   .on('data', (row) => {
     // console.log(row);
-    client.query(`SELECT * FROM users WHERE name=${row[4]} and email=${row[5]}`)
-      .then(result => {
-        console.log('User has been or not been found: ', result);
-
-      })
-    newObj.write(row.join(',') + '\n', 'utf-8')
+    try {
+      client.query(`SELECT * FROM users WHERE name='${row?.[4]}' and email='${row?.[5]}'`)
+        .then(result => {
+          console.log('User has been or not been found: ', result.rows.length);
+          if (result.rows.length === 0) {
+            console.log('We are here')
+            client.query(`INSERT INTO users VALUES(DEFAULT, ${row[4]}, ${row[5]});`)
+              .then(data => {
+                console.log(data);
+              })
+              .catch(err => {
+                console.log(err);
+              })
+          }
+        })
+    } catch (error) {
+      console.log('continuing because there was an error: ', error);
+    }
   })
