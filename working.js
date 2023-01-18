@@ -21,7 +21,7 @@ const {client} = require('./server/connectToDb.js');
   // Everything else if very straight forward!
   let text;
   let insertUser = (name, email) => {
-    text = `INSERT INTO users(name, email) VALUES($1, $2);`;ß
+    text = `INSERT INTO users(name, email) VALUES($1, $2);`;
     return client.query(text, [name, email])
       .then(res => {
         return res;
