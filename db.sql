@@ -11,18 +11,18 @@ DROP TABLE if exists users;
 
 CREATE TABLE if not exists users (
   user_id SERIAL PRIMARY KEY,
-  name varchar(60),
-  email varchar(60)
+  name varchar(60) NOT NULL,
+  email varchar(60) NOT NULL
 );
 
 CREATE TABLE if not exists questions (
   question_id SERIAL PRIMARY KEY,
-  product_id VARCHAR(7),
-  body VARCHAR(1000),
-  date DATE,
-  helpfulness SMALLINT,
-  reported BIT(1),
-  user_id SMALLINT,
+  product_id VARCHAR(7) NOT NULL,
+  body VARCHAR(1000) NOT NULL,
+  date DATE NOT NULL,
+  helpfulness SMALLINT NOT NULL,
+  reported BIT(1) NOT NULL,
+  user_id SMALLINT NOT NULL,
   CONSTRAINT fk_user
     FOREIGN KEY (user_id)
       REFERENCES users(user_id)
