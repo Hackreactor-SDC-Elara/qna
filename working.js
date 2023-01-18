@@ -19,7 +19,7 @@ const {client} = require('./server/connectToDb.js');
   // create a user if they do not already exist, and append the
   // use id to the question.answer query
   // Everything else if very straight forward!
-  let text;
+  let text, dateStart, dateEnd;
   let insertUser = (name, email) => {
     text = `INSERT INTO users(name, email) VALUES($1, $2);`;
     return client.query(text, [name, email])
@@ -38,7 +38,13 @@ const {client} = require('./server/connectToDb.js');
     console.log(`There was an error: `, err);
   })
   .on('data', async (row) => {
+    dateStart = Date.now()
     stream.pause();
     await insertUser(row[4], row[5]);
     stream.resume();
+    dateEnd = Date.now()
+    console.log(`The process has taken: ${dateEnd - dateStart} ms`);
+  })
+  .on('end', () => {
+    console.log('Finished');
   })
