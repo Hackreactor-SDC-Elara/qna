@@ -12,3 +12,5 @@ WITH NO DATA;
 INSERT INTO users (name, email)
 SELECT DISTINCT name, email
 FROM temp_users_table;
+
+DROP TABLE temp_users_table;

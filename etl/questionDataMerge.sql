@@ -6,14 +6,14 @@ CREATE TABLE if not exists temp_questions (
   asker_name varchar(60),
   asker_email varchar(60),
   reported bit(1),
-  helpful INTEGER,
+  helpful INTEGER
 );
 
 \copy  temp_questions
 FROM '/Users/justinstendara/Documents/HackReactor/Git/seniorPhase/sdc/qna/input_data/questions.csv'
 csv header;
 
-ALTER TABLE temp_questions INSERT user_id INTEGER;
+ALTER TABLE temp_questions ADD user_id INTEGER;
 
 UPDATE temp_questions
 SET
@@ -25,6 +25,8 @@ ALTER TABLE temp_questions DROP COLUMN asker_name;
 ALTER TABLE temp_questions DROP COLUMN asker_email;
 ALTER TABLE temp_questions RENAME COLUMN date_written TO date;
 
-INSERT INTO questions
-SELECT question_id, product_id, body, reported, date,  helpful, user_id
+INSERT INTO questions (question_id, product_id, body, helpfulness, reported, date, user_id)
+SELECT question_id, product_id, body, helpful, reported,  date, user_id
 FROM temp_questions;
+
+DROP TABLE temp_questions;
