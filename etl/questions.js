@@ -54,12 +54,12 @@ const {client} = require('../server/connectToDb.js');
     // id,product_id,body,date_written,asker_name,asker_email,reported,helpful
     console.log('row data: ', row);
     dateStart = Date.now()
-    stream.pause();
+    // stream.pause();
     let userId = await findUser(row[4], row[5]);
     console.log(userId);
     newObj.write(`${row[0]},${row[1]},${row[2]},${row[3]},${row[7]},${row[6]},${userId}`)
     counter++;
-    stream.resume();
+    // stream.resume();
     dateEnd = Date.now()
     console.log(`The process has taken: ${dateEnd - dateStart} ms`);
   })
