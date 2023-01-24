@@ -9,7 +9,7 @@ CREATE TABLE if not exists temp_answers (
   helpful INTEGER
 );
 
-\copy  temp_answers
+COPY temp_answers
 FROM '/Users/justinstendara/Documents/HackReactor/Git/seniorPhase/sdc/qna/input_data/answers.csv'
 csv header;
 

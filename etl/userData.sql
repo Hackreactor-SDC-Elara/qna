@@ -7,7 +7,9 @@ SELECT *
 FROM users
 WITH NO DATA;
 
-\copy  temp_users_table from '/Users/justinstendara/Documents/HackReactor/Git/seniorPhase/sdc/qna/input_data/myTest.csv' csv header;
+COPY temp_users_table
+FROM '/Users/justinstendara/Documents/HackReactor/Git/seniorPhase/sdc/qna/input_data/myTest.csv'
+csv header;
 
 INSERT INTO users (name, email)
 SELECT DISTINCT name, email
