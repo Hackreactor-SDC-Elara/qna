@@ -9,3 +9,10 @@ And my database looks like this:
   users: id, name, email
   answers: id, question_id, body, date, name_id, helpfulness, reported
   photos: id, answer_id, url
+
+When performing ETL follow the process outlined below:
+1. run the userData.js script below to generate the myTest.csv file
+2. run the userData.sql commands
+3. run the questionDataMerge.sql commands
+4. run the answersDataMerge.sql commands
+5. run the photosDataMerge.sql commands
