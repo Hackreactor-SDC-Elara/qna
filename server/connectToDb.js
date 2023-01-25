@@ -1,11 +1,8 @@
 const {Client} = require('pg');
+require('dotenv');
 
 const client = new Client ({
-  user: '',
-  host: 'localhost',
-  database: 'test',
-  password: '',
-  port: 5432
+  database: 'sdc'
 });
 
 client.connect(err => {
