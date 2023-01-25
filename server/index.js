@@ -1,19 +1,23 @@
 const express = require('express');
 const app = express();
-const PORT = 3000;
+const PORT = 3001;
 const {client} = require('./connectToDb.js');
+const {getQuestions} = require('../controllers/interactingWithQuestionsDb.js');
 
 app.get('/', (req, res) => {
   console.log('User has landed!');
   res.send('hi');
+
 })
 
 // GET '/qa/questions' => requires product_id, page, count
 //   Should return 200 if it was completed
-app.get('/qa/questions', (req, res) => {
+app.get('/qa/questions', async (req, res) => {
   req.query.page = req.query.page ?? 1;
   console.log('User has requested question information with the following parameters: ', req.query);
-  res.send(req.query);
+  getQuestions(client, req.query.product_id, req.query.page, req.query.count)
+    .then(information => res.status(200).send(information))
+    .catch(err => res.status(400).send(err));
 });
 
 // GET '/qa/questions/:question_id/answers' => requires question_id, page, and count
