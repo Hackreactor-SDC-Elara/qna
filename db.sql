@@ -12,7 +12,8 @@ DROP TABLE if exists users;
 CREATE TABLE if not exists users (
   user_id SERIAL PRIMARY KEY,
   name varchar(60) NOT NULL,
-  email varchar(60) NOT NULL
+  email varchar(60) NOT NULL,
+  UNIQUE (name, email)
 );
 
 CREATE TABLE if not exists questions (
