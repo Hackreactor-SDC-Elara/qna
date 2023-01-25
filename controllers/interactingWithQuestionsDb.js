@@ -3,7 +3,9 @@
 //   answers folder.
 
 let getQuestions = async (db, productId, page, count = 5) => {
-  return db.query('SELECT * FROM question q INNER JOIN users u ON u.user_id = q.user_id and q.product_id = $1 limit $2', [productId, count])
+  let query = 'SELECT * FROM questions q INNER JOIN users u ON u.user_id = q.user_id and q.product_id = $1 limit $2'
+
+  return db.query(query, [productId, count])
     .then(result => {
       return result.rows;
     })
