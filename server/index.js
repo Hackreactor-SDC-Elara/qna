@@ -18,7 +18,7 @@ app.get('/qa/questions', (req, res) => {
 
 // GET '/qa/questions/:question_id/answers' => requires question_id, page, and count
 //   Shoudl return 200 if it was completed
-app.get('/qa/questions', (req, res) => {
+app.get('/qa/questions/:question_id/answers', (req, res) => {
   req.query.page = req.query.page ?? 1;
   console.log('User has requested answer information with the following parameters: ', req.query);
   res.send(req.query);
@@ -33,7 +33,7 @@ app.post('/qa/questions', (req, res) => {
 
 // POST '/qa/questions/:question_id/answers' => requires body, name, email, and photos(opt)
 //   Should return 201 if successful
-app.post('/qa/questions', (req, res) => {
+app.post('/qa/questions/:question_id/answers', (req, res) => {
   console.log('User has tried to answer a question: ', req.query);
   res.send(req.query);
 });
