@@ -11,8 +11,9 @@ And my database looks like this:
   photos: id, answer_id, url
 
 When performing ETL follow the process outlined below:
-1. run the userData.js script below to generate the myTest.csv file
-2. run the userData.sql commands
-3. run the questionDataMerge.sql commands
-4. run the answersDataMerge.sql commands
-5. run the photosDataMerge.sql commands
+1. run the userData.js script within this directory to generate the myTest.csv file
+2. run the db.sql file in the postgres console
+3. run the userData.sql commands
+4. run the questionDataMerge.sql commands
+5. run the answersDataMerge.sql commands
+6. run the photosDataMerge.sql commands

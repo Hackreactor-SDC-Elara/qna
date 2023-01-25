@@ -1,3 +1,5 @@
+DROP TABLE IF EXISTS temp_answers;
+
 CREATE TABLE if not exists temp_answers (
   id bigint,
   question_id bigint,

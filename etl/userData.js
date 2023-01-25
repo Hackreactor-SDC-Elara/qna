@@ -34,5 +34,5 @@ let stream2 = fs.createReadStream('../input_data/questions.csv')
 .on('end', () => {
   endTime = Date.now();
   console.log(`Finished gettings users from the questions. Took ${(endTime - startTime) / 1000} s`);
-  return
+  return;
 });
