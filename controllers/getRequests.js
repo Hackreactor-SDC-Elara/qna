@@ -8,8 +8,8 @@ ON u.user_id = q.user_id and q.product_id = $1 ORDER BY \
 helpfulness DESC limit $2'
 
   return db.query(query, [productId, count])
-    .then(result => { return result.rows; })
-    .catch(err => { return err; })
+    .then(result => (result.rows))
+    .catch(err => (err))
 };
 
 let getAnswers = (db, questionId, page, count = 5) => {
@@ -18,8 +18,8 @@ ON u.user_id = a.user_id and a.question_id = $1 ORDER BY \
 helpfulness DESC limit $2';
 
   return db.query(query, [questionId, count])
-    .then(result => { return result.rows; })
-    .catch(err => { return err; });
+    .then(result => (result.rows))
+    .catch(err => (err));
 }
 
 module.exports = {
