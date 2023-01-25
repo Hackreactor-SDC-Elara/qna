@@ -32,3 +32,4 @@ SELECT id, question_id, body, helpful, reported,  date, user_id
 FROM temp_answers;
 
 DROP TABLE temp_answers;
+SELECT setval('answers_answer_id_seq', (SELECT MAX(answer_id) from "answers"));

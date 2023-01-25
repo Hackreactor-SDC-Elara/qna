@@ -32,3 +32,4 @@ SELECT question_id, product_id, body, helpful, reported,  date, user_id
 FROM temp_questions;
 
 DROP TABLE temp_questions;
+SELECT setval('questions_question_id_seq', (SELECT MAX(question_id) from "questions"));

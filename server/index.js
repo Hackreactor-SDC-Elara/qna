@@ -3,6 +3,7 @@ const app = express();
 const PORT = 3001;
 const {client} = require('./connectToDb.js');
 const {getQuestions, getAnswers} = require('../controllers/getRequests.js');
+const {postQuestion} = require('../controllers/postRequests.js');
 
 app.get('/', (req, res) => {
   console.log('User has landed!');
@@ -34,7 +35,12 @@ app.get('/qa/questions/:question_id/answers', (req, res) => {
 //   Should return 201 if successful
 app.post('/qa/questions', (req, res) => {
   console.log('User has tried to post a new question: ', req.query);
-  res.send(req.query);
+  postQuestion(client, 'This is the first question I am inserting', 'Justin8912', 'jnstendara@gmail.com', 71705)
+    .then(results => {
+      console.log(results);
+      res.status(200).send(results);
+    })
+  // res.send(req.query);
 });
 
 // POST '/qa/questions/:question_id/answers' => requires body, name, email, and photos(opt)
