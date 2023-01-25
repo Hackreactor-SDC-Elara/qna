@@ -1,6 +1,4 @@
 const {Client} = require('pg');
-require('dotenv');
-
 const client = new Client ({
   database: 'sdc'
 });
