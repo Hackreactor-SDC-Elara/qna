@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">45.45% </span>
+                <span class="strong">90.9% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>5/11</span>
+                <span class='fraction'>10/11</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">50% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>1/2</span>
+                <span class='fraction'>2/2</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">16.66% </span>
+                <span class="strong">83.33% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>1/6</span>
+                <span class='fraction'>5/6</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">45.45% </span>
+                <span class="strong">90.9% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>5/11</span>
+                <span class='fraction'>10/11</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line low'></div>
+    <div class='status-line high'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -90,28 +90,30 @@
 <a name='L25'></a><a href='#L25'>25</a>
 <a name='L26'></a><a href='#L26'>26</a>
 <a name='L27'></a><a href='#L27'>27</a>
-<a name='L28'></a><a href='#L28'>28</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L28'></a><a href='#L28'>28</a>
+<a name='L29'></a><a href='#L29'>29</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
@@ -127,18 +129,19 @@ ON u.user_id = q.user_id and q.product_id = $1 ORDER BY \
 helpfulness DESC limit $2'
 &nbsp;
   return db.query(query, [productId, count])
-    .then(<span class="fstat-no" title="function not covered" >re</span>sult =&gt; (<span class="cstat-no" title="statement not covered" >result.rows)</span>)
+    .then(result =&gt; (result.rows))
     .catch(<span class="fstat-no" title="function not covered" >er</span>r =&gt; (<span class="cstat-no" title="statement not covered" >err)</span>)
+&nbsp;
 };
 &nbsp;
-let getAnswers = <span class="fstat-no" title="function not covered" >(d</span>b, questionId, page, count = <span class="branch-0 cbranch-no" title="branch not covered" >5)</span> =&gt; {
-  let query = <span class="cstat-no" title="statement not covered" >'SELECT * FROM answers a INNER JOIN users u \</span>
+let getAnswers = (db, questionId, page, count = 5) =&gt; {
+  let query = 'SELECT * FROM answers a INNER JOIN users u \
 ON u.user_id = a.user_id and a.question_id = $1 ORDER BY \
 helpfulness DESC limit $2';
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  return db.query(query, [questionId, count])</span>
-    .then(<span class="fstat-no" title="function not covered" >re</span>sult =&gt; (<span class="cstat-no" title="statement not covered" >result.rows)</span>)
-    .catch(<span class="fstat-no" title="function not covered" >er</span>r =&gt; (<span class="cstat-no" title="statement not covered" >err)</span>);
+  return db.query(query, [questionId, count])
+    .then(result =&gt; (result.rows))
+    .catch(err =&gt; (err));
 }
 &nbsp;
 module.exports = {
@@ -151,7 +154,7 @@ module.exports = {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2023-01-25T22:19:04.469Z
+                at 2023-01-25T23:47:15.562Z
             </div>
         <script src="../prettify.js"></script>
         <script>
