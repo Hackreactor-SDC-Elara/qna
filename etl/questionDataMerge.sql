@@ -1,3 +1,5 @@
+DROP TABLE IF EXISTS temp_questions;
+
 CREATE TABLE if not exists temp_questions (
   question_id SERIAL NOT NULL,
   product_id bigint,
