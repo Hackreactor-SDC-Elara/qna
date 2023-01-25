@@ -2,7 +2,7 @@ const express = require('express');
 const app = express();
 const PORT = 3001;
 const {client} = require('./connectToDb.js');
-const {getQuestions} = require('../controllers/interactingWithQuestionsDb.js');
+const {getQuestions, getAnswers} = require('../controllers/interactingWithQuestionsDb.js');
 
 app.get('/', (req, res) => {
   console.log('User has landed!');
@@ -25,7 +25,10 @@ app.get('/qa/questions', async (req, res) => {
 app.get('/qa/questions/:question_id/answers', (req, res) => {
   req.query.page = req.query.page ?? 1;
   console.log('User has requested answer information with the following parameters: ', req.query);
-  res.send(req.query);
+  // res.send(req.query);
+  getAnswers(client, req.params.question_id, req.query.page, req.query.count)
+    .then(information => res.status(200).send(information))
+    .catch(err => res.status(400).send(err));
 });
 
 // POST '/qa/questions' => requires body, name, email, and product_id
