@@ -4,6 +4,7 @@ const PORT = 3001;
 const {client} = require('./connectToDb.js');
 const {getQuestions, getAnswers} = require('../controllers/getRequests.js');
 const {postQuestion} = require('../controllers/postRequests.js');
+const {helpfulAnswer} = require('../controllers/putRequests.js');
 
 app.get('/', (req, res) => {
   console.log('User has landed!');
@@ -67,8 +68,13 @@ app.put('/qa/questions/:question_id/report', (req, res) => {
 // PUT requires question_id
 //   Should return 204 if successful
 app.put('/qa/answers/:answer_id/helpful', (req, res) => {
-  console.log('User has tried to mark an answer helpful: ', req.query);
-  res.send(req.query);
+  helpfulAnswer(client, req.params.answer_id)
+    .then(() => {
+      res.status(204).send();
+    })
+    .catch(err => {
+      res.status(400).send(err);
+    });
 });
 
 // PUT requires question_id
