@@ -7,17 +7,10 @@ let getQuestions = (db, productId, page, count = 5) => {
 ON u.user_id = q.user_id and q.product_id = $1 ORDER BY \
 helpfulness DESC limit $2'
 
-try {
   return db.query(query, [productId, count])
     .then(result => (result.rows))
     .catch(err => (err))
-} catch (error) {
-  return () => {
-    return new Promise((resolve, reject) => {
-      resolve(Error('Invalid query elements used, please try again.'));
-    })
-  };
-}
+
 };
 
 let getAnswers = (db, questionId, page, count = 5) => {
