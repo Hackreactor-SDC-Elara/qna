@@ -16,12 +16,22 @@ let postQuestion = (db, body, name, email, productId) => {
       console.log(results);
       return results;
     })
+    .catch(err => (err))
+    .then(() => {
+      let postQuestionQuery = 'INSERT INTO questions (question_id, product_id, body, date, helpfulness, reported, user_id) \
+VALUES (DEFAULT, $1, $2, 0, 0, B\'0\', (SELECT user_id FROM users WHERE name = $3 and email = $4)) RETURNING question_id;';
+
+      return db.query(postQuestionQuery, [productId, body, name, email])
+        .then(results => (results))
+        .catch(err => (err));
+    })
   // let postQuestionQuery = 'INSERT INTO questions VALUES (DEFAULT, $1, $2, 0, B\'0\', 205, $3);';
 
   // return db.query(query, [])
   //   .then(results => (results))
   //   .catch(err => (err));
 }
+
 
 module.exports = {
   postQuestion: postQuestion,
