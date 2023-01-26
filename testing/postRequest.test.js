@@ -19,6 +19,7 @@ describe('Post requests for questions should be functional', () => {
 
   afterEach(async () => {
     await client.query('DELETE FROM questions WHERE product_id=\'71765\' and body=\'This is a test using my functions\'');
+    await client.query('DELETE FROM users WHERE name=\'jstning\' and email=\'email\'');
   })
 })
 
