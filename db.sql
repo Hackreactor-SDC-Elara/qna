@@ -31,12 +31,12 @@ CREATE TABLE if not exists questions (
 
 CREATE TABLE if not exists answers (
   answer_id SERIAL PRIMARY KEY,
-  question_id BIGINT,
-  body VARCHAR(1000),
-  date BIGINT,
-  user_id BIGINT,
-  helpfulness BIGINT,
-  reported BIT(1),
+  question_id BIGINT NOT NULL,
+  body VARCHAR(1000) NOT NULL,
+  date BIGINT NOT NULL,
+  user_id BIGINT NOT NULL,
+  helpfulness BIGINT NOT NULL,
+  reported BIT(1) NOT NULL,
   CONSTRAINT fk_question
     FOREIGN KEY (question_id)
       REFERENCES questions(question_id),
