@@ -13,7 +13,6 @@ let postQuestion = (db, body, name, email, productId) => {
 
   return db.query(insertUserQuery, [name, email])
     .then(results => {
-      console.log(results);
       return results;
     })
     .catch(err => (err))
@@ -24,12 +23,7 @@ VALUES (DEFAULT, $1, $2, 0, 0, B\'0\', (SELECT user_id FROM users WHERE name = $
       return db.query(postQuestionQuery, [productId, body, name, email])
         .then(results => (results))
         .catch(err => (err));
-    })
-  // let postQuestionQuery = 'INSERT INTO questions VALUES (DEFAULT, $1, $2, 0, B\'0\', 205, $3);';
-
-  // return db.query(query, [])
-  //   .then(results => (results))
-  //   .catch(err => (err));
+    });
 }
 
 
