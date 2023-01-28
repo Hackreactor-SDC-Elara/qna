@@ -1,11 +1,5 @@
-// Example question post requres-
-// INSERT INTO questions VALUES (DEFAULT,
-// 71705,
-// 'This is an attempt for my first insert question',
-// 0,
-// B'0',
-// 1,
-// 1674669353);
+let format = require('pg-format');
+let {formatPhotos} = require('./helperFunctions.js');
 
 let postQuestion = (db, body, name, email, productId) => {
   // We will need to get the userID - this is where 205 currently is
@@ -41,11 +35,23 @@ VALUES (DEFAULT, $1, $2, $5, (SELECT user_id FROM users WHERE name=$3 and email=
       let currDate = new Date();
       return db.query(answerBody, [questionId, body, name, email, Math.round(currDate.getTime() / 1000)])
     })
+    .catch(err => (err))
+    .then(results => {
+      if (results?.rows?.[0]?.answer_id === undefined) {
+        return results;
+      }
+      if (photos.length === 0) {
+        return results;
+      } else {
+        let photoString = formatPhotos(results.rows[0].answer_id, photos);
+        let photosQuery = 'INSERT INTO photos (answer_id, url) VALUES %s';
+        return db.query(format(photosQuery, photoString), []);
+      }
+    })
     .then(results => {
       return results;
     })
     .catch(err => {
-      console.log(err);
       return err;
     })
 }
