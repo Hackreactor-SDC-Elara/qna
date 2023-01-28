@@ -5,8 +5,13 @@ let formatPhotos = (answerId, arr) => {
 }
 
 let formatPhotosArrayServer = (photosString) => {
+
   photosString = photosString.slice(1, photosString.length - 1);
   let photosArr = photosString.split(',');
+
+  if (photosArr.length === 1 && photosArr[0] === '') {
+    photosArr = [];
+  }
   return photosArr;
 }
 
