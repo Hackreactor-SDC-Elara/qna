@@ -83,8 +83,13 @@ app.put('/qa/questions/:question_id/helpful', (req, res) => {
 // PUT requires question_id
 //   Should return 204 if successful
 app.put('/qa/questions/:question_id/report', (req, res) => {
-  console.log('User has tried to report a question: ', req.query);
-  res.send(req.query);
+  reportQuestion(client, req.params.question_id)
+    .then(results => {
+      res.status(204).send(results);
+    })
+    .catch(err => {
+      res.status(400).send(err);
+    });
 });
 
 // PUT requires question_id
