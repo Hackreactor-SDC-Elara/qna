@@ -4,7 +4,6 @@ let {formatPhotos} = require('./helperFunctions.js');
 let postQuestion = (db, body, name, email, productId) => {
   // We will need to get the userID - this is where 205 currently is
   let insertUserQuery = 'INSERT INTO users VALUES (DEFAULT, $1, $2);';
-
   return db.query(insertUserQuery, [name, email])
     .then(results => {
       return results;
@@ -18,7 +17,7 @@ VALUES (DEFAULT, $1, $2, $5, 0, B\'0\', (SELECT user_id FROM users WHERE name = 
         .then(results => (results))
         .catch(err => (err));
     });
-}
+};
 
 let postAnswer = (db, questionId, body, name, email, photos) => {
   let insertUserQuery = 'INSERT INTO users VALUES (DEFAULT, $1, $2);';
@@ -48,13 +47,10 @@ VALUES (DEFAULT, $1, $2, $5, (SELECT user_id FROM users WHERE name=$3 and email=
         return db.query(format(photosQuery, photoString), []);
       }
     })
-    .then(results => {
-      return results;
-    })
-    .catch(err => {
-      return err;
-    })
-}
+    .then(results => (results))
+    .catch(err => (err))
+};
+
 module.exports = {
   postQuestion: postQuestion,
   postAnswer: postAnswer

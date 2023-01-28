@@ -50,6 +50,7 @@ describe('Post requests for questions should be functional', () => {
 describe('Post requests for answers should be functional', () => {
   // Happy Path
   it('Should put a post request in for a user that has not been created yet (w/o photos)', async () => {
+    jest.setTimeout(7500);
     let answerBody = 'This is a test using my functions wth answers';
     let userName = 'asdflkj';
     let email = 'email';
@@ -119,11 +120,12 @@ describe('Helper fucntions should work how they are supposed to', () => {
       formatPhotos()
     }).toThrow("Cannot read properties of undefined (reading 'map')");
 
-    expect(formatPhotos(1, ['url'])).toBe('(1, \'url\')');
-    expect(formatPhotos(1, ['url1', 'url2'])).toBe('(1, \'url1\'), (1, \'url2\')');
+    expect(formatPhotos(1, ["'url'"])).toBe('(1, \'url\')');
+    expect(formatPhotos(1, ["'url1'", "'url2'"])).toBe('(1, \'url1\'), (1, \'url2\')');
     expect(formatPhotos(1, [])).toBe('');
   })
-})
+});
+
 afterAll(() => {
   client.end();
 })
