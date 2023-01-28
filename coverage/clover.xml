@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1674690435576" clover="3.2.0">
-  <project timestamp="1674690435577" name="All files">
-    <metrics statements="24" coveredstatements="21" conditionals="4" coveredconditionals="3" methods="10" coveredmethods="8" elements="38" coveredelements="32" complexity="0" loc="24" ncloc="24" packages="2" files="3" classes="3"/>
+<coverage generated="1674872216365" clover="3.2.0">
+  <project timestamp="1674872216366" name="All files">
+    <metrics statements="61" coveredstatements="45" conditionals="4" coveredconditionals="3" methods="31" coveredmethods="20" elements="96" coveredelements="68" complexity="0" loc="61" ncloc="61" packages="2" files="4" classes="4"/>
     <package name="controllers">
-      <metrics statements="17" coveredstatements="15" conditionals="2" coveredconditionals="2" methods="9" coveredmethods="7"/>
+      <metrics statements="54" coveredstatements="39" conditionals="2" coveredconditionals="2" methods="30" coveredmethods="19"/>
       <file name="getRequests.js" path="/Users/justinstendara/Documents/HackReactor/Git/seniorPhase/sdc/qna/controllers/getRequests.js">
         <metrics statements="11" coveredstatements="10" conditionals="2" coveredconditionals="2" methods="6" coveredmethods="5"/>
         <line num="5" count="1" type="cond" truecount="1" falsecount="0"/>
@@ -18,27 +18,67 @@
         <line num="23" count="1" type="stmt"/>
         <line num="26" count="1" type="stmt"/>
       </file>
+      <file name="postRequests.js" path="/Users/justinstendara/Documents/HackReactor/Git/seniorPhase/sdc/qna/controllers/postRequests.js">
+        <metrics statements="22" coveredstatements="12" conditionals="0" coveredconditionals="0" methods="12" coveredmethods="6"/>
+        <line num="10" count="1" type="stmt"/>
+        <line num="12" count="3" type="stmt"/>
+        <line num="14" count="3" type="stmt"/>
+        <line num="16" count="1" type="stmt"/>
+        <line num="18" count="2" type="stmt"/>
+        <line num="20" count="3" type="stmt"/>
+        <line num="22" count="3" type="stmt"/>
+        <line num="23" count="3" type="stmt"/>
+        <line num="24" count="2" type="stmt"/>
+        <line num="25" count="1" type="stmt"/>
+        <line num="29" count="1" type="stmt"/>
+        <line num="30" count="0" type="stmt"/>
+        <line num="32" count="0" type="stmt"/>
+        <line num="34" count="0" type="stmt"/>
+        <line num="36" count="0" type="stmt"/>
+        <line num="38" count="0" type="stmt"/>
+        <line num="41" count="0" type="stmt"/>
+        <line num="42" count="0" type="stmt"/>
+        <line num="45" count="0" type="stmt"/>
+        <line num="48" count="0" type="stmt"/>
+        <line num="49" count="0" type="stmt"/>
+        <line num="52" count="1" type="stmt"/>
+      </file>
       <file name="putRequests.js" path="/Users/justinstendara/Documents/HackReactor/Git/seniorPhase/sdc/qna/controllers/putRequests.js">
-        <metrics statements="6" coveredstatements="5" conditionals="0" coveredconditionals="0" methods="3" coveredmethods="2"/>
+        <metrics statements="21" coveredstatements="17" conditionals="0" coveredconditionals="0" methods="12" coveredmethods="8"/>
         <line num="1" count="1" type="stmt"/>
         <line num="2" count="2" type="stmt"/>
         <line num="3" count="2" type="stmt"/>
         <line num="4" count="2" type="stmt"/>
         <line num="5" count="0" type="stmt"/>
         <line num="8" count="1" type="stmt"/>
+        <line num="9" count="2" type="stmt"/>
+        <line num="10" count="2" type="stmt"/>
+        <line num="11" count="2" type="stmt"/>
+        <line num="12" count="0" type="stmt"/>
+        <line num="15" count="1" type="stmt"/>
+        <line num="16" count="2" type="stmt"/>
+        <line num="18" count="2" type="stmt"/>
+        <line num="19" count="2" type="stmt"/>
+        <line num="20" count="0" type="stmt"/>
+        <line num="23" count="1" type="stmt"/>
+        <line num="24" count="2" type="stmt"/>
+        <line num="26" count="2" type="stmt"/>
+        <line num="27" count="2" type="stmt"/>
+        <line num="28" count="0" type="stmt"/>
+        <line num="31" count="1" type="stmt"/>
       </file>
     </package>
     <package name="testing">
       <metrics statements="7" coveredstatements="6" conditionals="2" coveredconditionals="1" methods="1" coveredmethods="1"/>
       <file name="connectToDBTest.js" path="/Users/justinstendara/Documents/HackReactor/Git/seniorPhase/sdc/qna/testing/connectToDBTest.js">
         <metrics statements="7" coveredstatements="6" conditionals="2" coveredconditionals="1" methods="1" coveredmethods="1"/>
-        <line num="1" count="2" type="stmt"/>
-        <line num="2" count="2" type="stmt"/>
-        <line num="6" count="2" type="stmt"/>
-        <line num="7" count="2" type="cond" truecount="1" falsecount="1"/>
+        <line num="1" count="3" type="stmt"/>
+        <line num="2" count="3" type="stmt"/>
+        <line num="6" count="3" type="stmt"/>
+        <line num="7" count="3" type="cond" truecount="1" falsecount="1"/>
         <line num="8" count="0" type="stmt"/>
-        <line num="10" count="2" type="stmt"/>
-        <line num="14" count="2" type="stmt"/>
+        <line num="10" count="3" type="stmt"/>
+        <line num="14" count="3" type="stmt"/>
       </file>
     </package>
   </project>

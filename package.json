@@ -4,7 +4,7 @@
   "description": "This is the back end storage and server for the questions and answers service",
   "main": "index.js",
   "scripts": {
-    "test": "jest",
+    "test": "npx jest",
     "server": "nodemon ./server/index.js --watch"
   },
   "repository": {
