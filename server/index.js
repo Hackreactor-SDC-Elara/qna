@@ -3,13 +3,15 @@ const app = express();
 const PORT = 3001;
 const {client} = require('./connectToDb.js');
 const {getQuestions, getAnswers} = require('../controllers/getRequests.js');
-const {postQuestion} = require('../controllers/postRequests.js');
-const {helpfulAnswer} = require('../controllers/putRequests.js');
+const {postQuestion, postAnswer} = require('../controllers/postRequests.js');
+const {helpfulAnswer, helpfulQuestion, reportAnswer, reportQuestion} =
+  require('../controllers/putRequests.js');
+
+const {formatPhotosArrayServer} = require('../controllers/helperFunctions.js');
 
 app.get('/', (req, res) => {
   console.log('User has landed!');
   res.send('hi');
-
 })
 
 // GET '/qa/questions' => requires product_id, page, count
@@ -34,21 +36,39 @@ app.get('/qa/questions/:question_id/answers', (req, res) => {
 
 // POST '/qa/questions' => requires body, name, email, and product_id
 //   Should return 201 if successful
+// let postQuestion = (db, body, name, email, productId)
 app.post('/qa/questions', (req, res) => {
-  console.log('User has tried to post a new question: ', req.query);
-  postQuestion(client, 'This is the first question I am inserting', 'Justin8912', 'jnstendara@gmail.com', 71705)
+  let body = req.query.body;
+  let name = req.query.name;
+  let email = req.query.email;
+  let productId = parseInt(req.query.product_id);
+  postQuestion(client, body, name, email, productId)
     .then(results => {
-      console.log(results);
-      res.status(200).send(results);
+      res.status(201).send(results);
     })
-  // res.send(req.query);
+    .catch(err => {
+      res.status(400).send(err);
+    })
 });
 
 // POST '/qa/questions/:question_id/answers' => requires body, name, email, and photos(opt)
 //   Should return 201 if successful
 app.post('/qa/questions/:question_id/answers', (req, res) => {
-  console.log('User has tried to answer a question: ', req.query);
-  res.send(req.query);
+  let body = req.query.body;
+  let name = req.query.name;
+  let email = req.query.email;
+  let questionId = req.params.question_id;
+  let photos = formatPhotosArrayServer(req.query.photos);
+
+  // let postAnswer = (db, questionId, body, name, email, photos)
+  postAnswer(client, questionId, body, name, email, photos)
+    .then(results => {
+      console.log(results);
+      res.status(201).send(results)
+    })
+    .catch(err => {
+      res.status(400).send(err)
+    });
 });
 
 // PUT requires question_id
