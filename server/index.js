@@ -107,8 +107,13 @@ app.put('/qa/answers/:answer_id/helpful', (req, res) => {
 // PUT requires question_id
 //   Should return 204 if successful
 app.put('/qa/answers/:answer_id/report', (req, res) => {
-  console.log('User has tried to report an answer: ', req.query);
-  res.send(req.query);
+  reportAnswer(client, req.params.answer_id)
+    .then(() => {
+      res.status(204).send();
+    })
+    .catch(err => {
+      res.status(400).send(err);
+    });
 });
 
 app.listen(PORT, () => {
