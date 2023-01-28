@@ -27,9 +27,11 @@ ALTER TABLE temp_answers DROP COLUMN answerer_name;
 ALTER TABLE temp_answers DROP COLUMN answerer_email;
 ALTER TABLE temp_answers RENAME COLUMN date_written TO date;
 
-INSERT INTO answers (answer_id, question_id, body, helpfulness, reported, date, user_id)
-SELECT id, question_id, body, helpful, reported,  date, user_id
-FROM temp_answers;
+BEGIN
+  INSERT INTO answers (answer_id, question_id, body, helpfulness, reported, date, user_id)
+  SELECT id, question_id, body, helpful, reported, date, user_id
+  FROM temp_answers
+COMMIT;
 
 DROP TABLE temp_answers;
 SELECT setval('answers_answer_id_seq', (SELECT MAX(answer_id) from "answers"));
