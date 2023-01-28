@@ -59,11 +59,8 @@ app.post('/qa/questions/:question_id/answers', (req, res) => {
   let email = req.query.email;
   let questionId = req.params.question_id;
   let photos = formatPhotosArrayServer(req.query.photos);
-
-  // let postAnswer = (db, questionId, body, name, email, photos)
   postAnswer(client, questionId, body, name, email, photos)
     .then(results => {
-      console.log(results);
       res.status(201).send(results)
     })
     .catch(err => {
@@ -74,8 +71,13 @@ app.post('/qa/questions/:question_id/answers', (req, res) => {
 // PUT requires question_id
 //   Should return 204 if successful
 app.put('/qa/questions/:question_id/helpful', (req, res) => {
-  console.log('User has tried to mark a question helpful: ', req.query);
-  res.send(req.query);
+  helpfulQuestion(client, req.params.question_id)
+    .then(results => {
+      res.status(204).send(results);
+    })
+    .catch(err => {
+      res.status(400).send(err);
+    })
 });
 
 // PUT requires question_id
