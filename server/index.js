@@ -56,7 +56,10 @@ app.get('/qa/questions/:question_id/answers', (req, res) => {
   // console.log('User has requested answer information with the following parameters: ', req.query);
   getAnswers(client, req.params.question_id, req.query.page, req.query.count)
     .then(information => res.status(200).send(information))
-    .catch(err => res.status(400).send(err));
+    .catch(err => {
+      console.log(err);
+      res.status(400).send(err)
+    });
 });
 
 // POST '/qa/questions' => requires body, name, email, and product_id

@@ -87,14 +87,46 @@ WHERE a.question_id IN (%s)';
     .catch(err => (err));
 };
 
-let getAnswers = (db, questionId, page, count = 5) => {
-  let query = 'SELECT * FROM answers a INNER JOIN users u \
-ON u.user_id = a.user_id and a.question_id = $1 ORDER BY \
-helpfulness DESC limit $2';
+let getAnswers = (db, questionId, page = 0, count = 5) => {
+  let query = 'SELECT a.answer_id, u.name, a.body, a.date, a.helpfulness \
+FROM answers a \
+INNER JOIN users u \
+ON u.user_id = a.user_id and a.question_id = $1 \
+ORDER BY helpfulness DESC limit $2';
 
   return db.query(query, [questionId, count])
-    .then(result => (result.rows))
-    .catch(err => (err));
+    .then(result => {
+      let photosQuery = 'SELECT p.url, p.photo_id, p.answer_id \
+FROM photos p \
+WHERE p.answer_id IN (%s)';
+
+      return Promise.all([
+        result.rows,
+        db.query(format(photosQuery, result.rows.map(val => (val.answer_id))))
+      ]);
+    })
+    .then(results => {
+      let answersIdx = results[0].map(val => {
+        val.photos = [];
+        return val.answer_id;
+      });
+      for (let i = 0; i < results[1].rows.length ; i++) {
+        let answerId = results[1].rows[i].answer_id;
+        let currentPhoto = results[1].rows[i];
+        let currentAnswerIdx = answersIdx.indexOf(parseInt(answerId));
+        console.log('currentPhoto: ', currentPhoto)
+        currentPhoto.id = currentPhoto.photo_id;
+        delete currentPhoto.answer_id;
+        delete currentPhoto.photo_id;
+        results[0][currentAnswerIdx]['photos'].push(currentPhoto);
+      }
+      console.log(results[0])
+      return results[0];
+    })
+    .catch(err => {
+      console.log(err)
+      return err
+    });
 }
 
 module.exports = {
