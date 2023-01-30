@@ -22,11 +22,8 @@ WHERE a.question_id IN (%s)';
       return Promise.all([result, db.query(format(answersQuery, resultArray.join(',')))]);
     })
     .then(results => {
-      // console.log(results[1].rows);
-      // console.log(results[0])
-
       let product_answer = {};
-
+      console.log(results[1].rows);
       results[1].rows.map((val, idx) => {
         if (product_answer[val.question_id] === undefined) {
           product_answer[val.question_id] = [idx];
@@ -39,14 +36,23 @@ WHERE a.question_id IN (%s)';
 
       let thisThing = JSON.parse(JSON.stringify(results[0]));
 
-      console.log(foundQuestions);
       for (let i = 0; i < thisThing.length; i++) {
         let question_id = thisThing[i]['question_id'];
         thisThing[i].answers = {};
         if (foundQuestions.includes(question_id.toString())) {
-          console.log('here')
           let answerIdx = product_answer[question_id.toString()];
-          thisThing[i]['answers'] = results[1].rows[answerIdx[0]];
+          for (let j = 0 ; j < answerIdx.length; j++) {
+            let answerId = results[1].rows[answerIdx[j]].answer_id;
+            let transformObject = (obj) => {
+              obj.id = obj.answer_id;
+              obj.answerer_name = obj.name;
+
+              delete obj.answer_id;
+              delete obj.name;
+            }
+            transformObject(results[1].rows[answerIdx[j]])
+            thisThing[i]['answers'][answerId] = results[1].rows[answerIdx[j]];
+          }
         }
       }
       return thisThing;
