@@ -18,10 +18,35 @@ app.get('/', (req, res) => {
 //   Should return 200 if it was completed
 app.get('/qa/questions', async (req, res) => {
   req.query.page = req.query.page ?? 1;
+  let productId = req.query.product_id;
   // console.log('User has requested question information with the following parameters: ', req.query);
-  getQuestions(client, req.query.product_id, req.query.page, req.query.count)
-    .then(information => res.status(200).send(information))
-    .catch(err => res.status(400).send(err));
+  let wrapperObj = {product_id: productId};
+  getQuestions(client, productId, req.query.page, req.query.count)
+    .then(results => {
+      let questionObj = results.map((val) => {
+        val.question_body = val.body;
+        val.question_date = new Date(parseInt(val.date)).toISOString();
+        val.asker_name = val.name;
+        val.question_helpfulness = val.helpfulness;
+        val.reported = Boolean(parseInt(val.reported)) ? true : false;
+
+        return {
+          question_id: val.question_id,
+          question_body: val.body,
+          question_date: val.date,
+          asker_name: val.name,
+          question_helpfulness: val.helpfulness,
+          reported:  Boolean(parseInt(val.reported)) ? true : false,
+          answers: val.answers
+        }
+      });
+      wrapperObj.results = questionObj;
+      res.status(200).send(wrapperObj);
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(400).send(err)
+    });
 });
 
 // GET '/qa/questions/:question_id/answers' => requires question_id, page, and count
