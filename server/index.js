@@ -137,24 +137,16 @@ app.put('/qa/questions/:question_id/report', (req, res) => {
 //   Should return 204 if successful
 app.put('/qa/answers/:answer_id/helpful', (req, res) => {
   helpfulAnswer(client, req.params.answer_id)
-    .then(() => {
-      res.status(204).send();
-    })
-    .catch(err => {
-      res.status(400).send(err);
-    });
+    .then(() => res.status(204).send())
+    .catch(err => res.status(400).send(err));
 });
 
 // PUT requires question_id
 //   Should return 204 if successful
 app.put('/qa/answers/:answer_id/report', (req, res) => {
   reportAnswer(client, req.params.answer_id)
-    .then(() => {
-      res.status(204).send();
-    })
-    .catch(err => {
-      res.status(400).send(err);
-    });
+    .then(() => res.status(204).send())
+    .catch(err => res.status(400).send(err));
 });
 
 app.listen(PORT, () => {
