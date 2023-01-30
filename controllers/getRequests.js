@@ -46,10 +46,7 @@ WHERE a.question_id IN (%s)';
         if (foundQuestions.includes(question_id.toString())) {
           console.log('here')
           let answerIdx = product_answer[question_id.toString()];
-          console.log(answerIdx);
-          console.log(results[1].rows[answerIdx]);
           thisThing[i]['answers'] = results[1].rows[answerIdx[0]];
-          console.log(thisThing[i]);
         }
       }
       return thisThing;
