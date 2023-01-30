@@ -55,7 +55,20 @@ app.get('/qa/questions/:question_id/answers', (req, res) => {
   req.query.page = req.query.page ?? 1;
   // console.log('User has requested answer information with the following parameters: ', req.query);
   getAnswers(client, req.params.question_id, req.query.page, req.query.count)
-    .then(information => res.status(200).send(information))
+    .then(information => {
+      let wrappedObj = {
+        question: req.params.question_id,
+        page: req.query.page,
+        count: req.query.count
+      };
+      information = information.map(val => {
+        val.date = new Date(parseInt(val.date)).toISOString();
+
+        return val;
+      });
+      wrappedObj['results'] = information;
+      res.status(200).send(wrappedObj)
+    })
     .catch(err => {
       console.log(err);
       res.status(400).send(err)
