@@ -18,12 +18,21 @@ WHERE a.question_id IN (%s)';
 
       let resultArray = result.map(val => (val.question_id));
 
-      return Promise.all([result, db.query(format(answersQuery, resultArray.join(',')))]);
+      return Promise.all([
+        result,
+        db.query(format(answersQuery, resultArray.join(',')))
+      ]);
     })
     .then(results => {
       let photosQuery = 'SELECT p.url, p.answer_id FROM photos p WHERE p.answer_id IN (%s)';
 
-      return Promise.all([results[0], results[1], db.query(format(photosQuery, results[1].rows.map(val => (val.answer_id)).join(',')))])
+      return Promise.all([
+        results[0],
+        results[1],
+        db.query(
+          format(photosQuery, results[1].rows.map(val => (val.answer_id)).join(','))
+        )
+      ]);
     })
     .then(results => {
       let product_answer = {};
@@ -48,30 +57,34 @@ WHERE a.question_id IN (%s)';
           for (let j = 0 ; j < answerIdx.length; j++) {
             let answerId = results[1].rows[answerIdx[j]].answer_id;
             let transformObject = (obj) => {
+              // Transforming the answer object information
               obj.id = obj.answer_id;
               obj.answerer_name = obj.name;
-              obj.photos = [];
               obj.date = new Date(parseInt(obj.date)).toISOString();
+              obj.photos = [];
               results[2].rows.map(val => {
                 if (val.answer_id === obj.id.toString()) {
                   obj.photos.push(val.url);
                 }
               });
+
+              // Deleting irrelevant key value pairs
               delete obj.answer_id;
               delete obj.name;
               delete obj.question_id;
             }
-            transformObject(results[1].rows[answerIdx[j]])
+
+            // Transforming the question object to have the right shape
+            transformObject(results[1].rows[answerIdx[j]]);
+
+            // Assigning the answers object to the question object
             thisThing[i]['answers'][answerId] = results[1].rows[answerIdx[j]];
           }
         }
       }
       return thisThing;
     })
-    .catch(err => {
-      console.log(err);
-      return err})
-
+    .catch(err => (err));
 };
 
 let getAnswers = (db, questionId, page, count = 5) => {
