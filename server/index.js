@@ -33,7 +33,7 @@ app.get('/qa/questions', async (req, res) => {
         return {
           question_id: val.question_id,
           question_body: val.body,
-          question_date: val.date,
+          question_date: val.question_date,
           asker_name: val.name,
           question_helpfulness: val.helpfulness,
           reported:  Boolean(parseInt(val.reported)) ? true : false,
