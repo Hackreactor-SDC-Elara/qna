@@ -114,19 +114,16 @@ WHERE p.answer_id IN (%s)';
         let answerId = results[1].rows[i].answer_id;
         let currentPhoto = results[1].rows[i];
         let currentAnswerIdx = answersIdx.indexOf(parseInt(answerId));
-        console.log('currentPhoto: ', currentPhoto)
+
         currentPhoto.id = currentPhoto.photo_id;
         delete currentPhoto.answer_id;
         delete currentPhoto.photo_id;
         results[0][currentAnswerIdx]['photos'].push(currentPhoto);
       }
-      console.log(results[0])
+
       return results[0];
     })
-    .catch(err => {
-      console.log(err)
-      return err
-    });
+    .catch(err => (err));
 }
 
 module.exports = {
