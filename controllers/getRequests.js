@@ -11,10 +11,9 @@ WHERE q.product_id = $1 LIMIT $2';
   return db.query(query, [productId, count])
     .then(result => (result.rows))
     .then(result => {
-      let answersQuery = 'SELECT a.answer_id, a.body, a.date, a.helpfulness, u.name, p.url, a.question_id \
+      let answersQuery = 'SELECT a.answer_id, a.body, a.date, a.helpfulness, u.name, a.question_id \
 FROM answers a \
 INNER JOIN users u ON u.user_id = a.user_id \
-INNER JOIN photos p ON p.answer_id = a.answer_id \
 WHERE a.question_id IN (%s)';
 
       let resultArray = result.map(val => (val.question_id));
@@ -22,8 +21,13 @@ WHERE a.question_id IN (%s)';
       return Promise.all([result, db.query(format(answersQuery, resultArray.join(',')))]);
     })
     .then(results => {
+      let photosQuery = 'SELECT p.url, p.answer_id FROM photos p WHERE p.answer_id IN (%s)';
+
+      return Promise.all([results[0], results[1], db.query(format(photosQuery, results[1].rows.map(val => (val.answer_id)).join(',')))])
+    })
+    .then(results => {
       let product_answer = {};
-      console.log(results[1].rows);
+
       results[1].rows.map((val, idx) => {
         if (product_answer[val.question_id] === undefined) {
           product_answer[val.question_id] = [idx];
@@ -46,9 +50,15 @@ WHERE a.question_id IN (%s)';
             let transformObject = (obj) => {
               obj.id = obj.answer_id;
               obj.answerer_name = obj.name;
-
+              obj.photos = [];
+              results[2].rows.map(val => {
+                if (val.answer_id === obj.id.toString()) {
+                  obj.photos.push(val.url);
+                }
+              });
               delete obj.answer_id;
               delete obj.name;
+              delete obj.question_id;
             }
             transformObject(results[1].rows[answerIdx[j]])
             thisThing[i]['answers'][answerId] = results[1].rows[answerIdx[j]];
