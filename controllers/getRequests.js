@@ -51,6 +51,7 @@ WHERE a.question_id IN (%s)';
               obj.id = obj.answer_id;
               obj.answerer_name = obj.name;
               obj.photos = [];
+              obj.date = new Date(parseInt(obj.date)).toISOString();
               results[2].rows.map(val => {
                 if (val.answer_id === obj.id.toString()) {
                   obj.photos.push(val.url);
