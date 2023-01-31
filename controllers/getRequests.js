@@ -4,35 +4,51 @@
 let format = require('pg-format');
 
 let getQuestions = (db, productId, page, count = 5) => {
+  if (productId === undefined) {
+    throw new Error('TypeError: ProductID must be included');
+  }
+
+  if (typeof parseInt(productId) !== 'number' || parseFloat(productId) !== parseInt(productId)) {
+    throw new Error('ProductId must be an integer');
+  }
   let query = 'SELECT q.question_id, q.body, q.date, q.helpfulness, q.reported, u.name \
 FROM questions q INNER JOIN users u ON u.user_id = q.user_id \
-WHERE q.product_id = $1 LIMIT $2';
+WHERE q.product_id = $1 ORDER BY helpfulness DESC LIMIT $2';
 
   return db.query(query, [productId, count])
     .then(result => (result.rows))
     .then(result => {
-      let answersQuery = 'SELECT a.answer_id, a.body, a.date, a.helpfulness, u.name, a.question_id \
+      if (result.length === 0) {
+        return [result, {rows:[]}];
+      } else {
+        let answersQuery = 'SELECT a.answer_id, a.body, a.date, a.helpfulness, u.name, a.question_id \
 FROM answers a \
 INNER JOIN users u ON u.user_id = a.user_id \
 WHERE a.question_id IN (%s)';
 
-      let resultArray = result.map(val => (val.question_id));
+        let resultArray = result.map(val => (val.question_id));
 
-      return Promise.all([
-        result,
-        db.query(format(answersQuery, resultArray.join(',')))
-      ]);
+        return Promise.all([
+          result,
+          db.query(format(answersQuery, resultArray.join(',')))
+        ]);
+
+      }
     })
     .then(results => {
-      let photosQuery = 'SELECT p.url, p.answer_id FROM photos p WHERE p.answer_id IN (%s)';
+      if (results[1].rows.length === 0) {
+        return [...results, {rows:[]}];
+      } else {
+        let photosQuery = 'SELECT p.url, p.answer_id FROM photos p WHERE p.answer_id IN (%s)';
 
-      return Promise.all([
-        results[0],
-        results[1],
-        db.query(
-          format(photosQuery, results[1].rows.map(val => (val.answer_id)).join(','))
-        )
-      ]);
+        return Promise.all([
+          results[0],
+          results[1],
+          db.query(
+            format(photosQuery, results[1].rows.map(val => (val.answer_id)).join(','))
+          )
+        ]);
+      }
     })
     .then(results => {
       let product_answer = {};
@@ -88,6 +104,13 @@ WHERE a.question_id IN (%s)';
 };
 
 let getAnswers = (db, questionId, page = 0, count = 5) => {
+  if (questionId === undefined) {
+    throw new Error('TypeError: QuestionId must be included');
+  }
+
+  if (typeof parseInt(questionId) !== 'number' || parseFloat(questionId) !== parseInt(questionId)) {
+    throw new Error('questionId must be an integer');
+  }
   let query = 'SELECT a.answer_id, u.name, a.body, a.date, a.helpfulness \
 FROM answers a \
 INNER JOIN users u \
@@ -96,6 +119,9 @@ ORDER BY helpfulness DESC limit $2';
 
   return db.query(query, [questionId, count])
     .then(result => {
+      if (result.rows.length === 0) {
+        return [result.rows, {rows:[]}]
+      }
       let photosQuery = 'SELECT p.url, p.photo_id, p.answer_id \
 FROM photos p \
 WHERE p.answer_id IN (%s)';
