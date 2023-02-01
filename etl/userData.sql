@@ -16,3 +16,5 @@ SELECT DISTINCT name, email
 FROM temp_users_table;
 
 DROP TABLE temp_users_table;
+
+CREATE INDEX user_user_id ON users (user_id);

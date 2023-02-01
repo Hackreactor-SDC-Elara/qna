@@ -13,7 +13,7 @@ let getQuestions = (db, productId, page, count = 5) => {
   }
   let query = 'SELECT q.question_id, q.body, q.date, q.helpfulness, q.reported, u.name \
 FROM questions q INNER JOIN users u ON u.user_id = q.user_id \
-WHERE q.product_id = $1 ORDER BY helpfulness DESC LIMIT $2';
+WHERE q.product_id in ($1) ORDER BY helpfulness DESC LIMIT $2';
 
   return db.query(query, [productId, count])
     .then(result => (result.rows))
@@ -114,7 +114,7 @@ let getAnswers = (db, questionId, page = 0, count = 5) => {
   let query = 'SELECT a.answer_id, u.name, a.body, a.date, a.helpfulness \
 FROM answers a \
 INNER JOIN users u \
-ON u.user_id = a.user_id and a.question_id = $1 \
+ON u.user_id = a.user_id and a.question_id in ($1) \
 ORDER BY helpfulness DESC limit $2';
 
   return db.query(query, [questionId, count])
