@@ -35,3 +35,7 @@ COMMIT;
 
 DROP TABLE temp_answers;
 SELECT setval('answers_answer_id_seq', (SELECT MAX(answer_id) from "answers"));
+
+CREATE INDEX answer_questions_ids ON answers (question_id);
+CREATE INDEX answer_answer_ids ON answers (answer_id);
+CREATE INDEX answer_user_ids ON answers (user_id);

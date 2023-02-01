@@ -33,3 +33,7 @@ FROM temp_questions;
 
 DROP TABLE temp_questions;
 SELECT setval('questions_question_id_seq', (SELECT MAX(question_id) from "questions"));
+
+CREATE INDEX question_answer_ids ON answers (question_id);
+CREATE INDEX question_user_ids ON answers (user_id);
+CREATE INDEX question_product_id ON questions (product_id);
