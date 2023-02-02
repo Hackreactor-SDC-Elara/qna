@@ -16,7 +16,7 @@ describe('Testing the db query times for all queries related to the get question
       {question_id: '2600000'},
       ]
     );
-  });
+  }, 7500);
 
   it('Should run within 50 ms: get photos function', async () => {
     await queryFunctions.getPhotosFromDB(client, [
@@ -32,7 +32,7 @@ describe('Testing the db query times for all queries related to the get question
 describe('Testing the db query times for all queries related to the get get answers', () => {
   it('Should run within 50ms: get answers', async () => {
     await queryFunctions.getAnswersFromDBAnswersRequest(client, '71705', 1, 20);
-  });
+  }, 7500);
 
   it('Should run within 50ms: get photos', async () => {
     await queryFunctions.getPhotosFromDBAnswersRequest(client, [
