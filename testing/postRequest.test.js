@@ -129,7 +129,5 @@ describe('Helper fucntions should work how they are supposed to', () => {
 });
 
 afterAll(async () => {
-  await client.end(() => {
-    console.log('Pool has ended');
-  });
+  await client.end();
 })
