@@ -2,51 +2,41 @@
 //   controllers, since they will be the same for the questions and
 //   answers folder.
 let format = require('pg-format');
+const {
+  getQuestionsFromDB,
+  getAnswersFromDB,
+  getPhotosFromDB,
+  getAnswersFromDBAnswersRequest,
+  getPhotosFromDBAnswersRequest
+} = require('./asyncFunctions.js');
 
 let getQuestions = (db, productId, page, count = 5) => {
   if (productId === undefined) {
     throw new Error('TypeError: ProductID must be included');
   }
-
   if (typeof parseInt(productId) !== 'number' || parseFloat(productId) !== parseInt(productId)) {
     throw new Error('ProductId must be an integer');
   }
-  let query = 'SELECT q.question_id, q.body, q.date, q.helpfulness, q.reported, u.name \
-FROM questions q INNER JOIN users u ON u.user_id = q.user_id \
-WHERE q.product_id in ($1) ORDER BY helpfulness DESC LIMIT $2';
 
-  return db.query(query, [productId, count])
-    .then(result => (result.rows))
+  return getQuestionsFromDB(db, productId, page, count)
     .then(result => {
       if (result.length === 0) {
         return [result, {rows:[]}];
       } else {
-        let answersQuery = 'SELECT a.answer_id, a.body, a.date, a.helpfulness, u.name, a.question_id \
-FROM answers a \
-INNER JOIN users u ON u.user_id = a.user_id \
-WHERE a.question_id IN (%s)';
-
-        let resultArray = result.map(val => (val.question_id));
-
         return Promise.all([
           result,
-          db.query(format(answersQuery, resultArray.join(',')))
+          getAnswersFromDB(db, result)
         ]);
-
       }
     })
     .then(results => {
       if (results[1].rows.length === 0) {
         return [...results, {rows:[]}];
       } else {
-        let photosQuery = 'SELECT p.url, p.answer_id FROM photos p WHERE p.answer_id IN (%s)';
-
         return Promise.all([
           results[0],
           results[1],
-          db.query(
-            format(photosQuery, results[1].rows.map(val => (val.answer_id)).join(','))
-          )
+          getPhotosFromDB(db, results[1].rows)
         ]);
       }
     })
@@ -100,7 +90,10 @@ WHERE a.question_id IN (%s)';
       }
       return thisThing;
     })
-    .catch(err => (err));
+    .catch(err => {
+      console.log(err);
+      return err;
+    });
 };
 
 let getAnswers = (db, questionId, page = 0, count = 5) => {
@@ -111,24 +104,16 @@ let getAnswers = (db, questionId, page = 0, count = 5) => {
   if (typeof parseInt(questionId) !== 'number' || parseFloat(questionId) !== parseInt(questionId)) {
     throw new Error('questionId must be an integer');
   }
-  let query = 'SELECT a.answer_id, u.name, a.body, a.date, a.helpfulness \
-FROM answers a \
-INNER JOIN users u \
-ON u.user_id = a.user_id and a.question_id in ($1) \
-ORDER BY helpfulness DESC limit $2';
 
-  return db.query(query, [questionId, count])
+  return getAnswersFromDBAnswersRequest(db, questionId, page, count)
     .then(result => {
       if (result.rows.length === 0) {
         return [result.rows, {rows:[]}]
       }
-      let photosQuery = 'SELECT p.url, p.photo_id, p.answer_id \
-FROM photos p \
-WHERE p.answer_id IN (%s)';
 
       return Promise.all([
         result.rows,
-        db.query(format(photosQuery, result.rows.map(val => (val.answer_id))))
+        getPhotosFromDBAnswersRequest(db, result.rows)
       ]);
     })
     .then(results => {
