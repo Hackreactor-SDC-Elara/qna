@@ -1,7 +1,11 @@
-const {Client} = require('pg');
-const client = new Client ({
+const {Pool} = require('pg');
+// const client = new Client ({
+//   database: 'test'
+// });
+
+const client = new Pool({
   database: 'test'
-});
+})
 
 client.connect(err => {
   if (err) {
