@@ -10,90 +10,92 @@ const {
   getPhotosFromDBAnswersRequest
 } = require('./asyncFunctions.js');
 
-let getQuestions = (db, productId, page, count = 5) => {
+let getQuestions = async (db, productId, page, count = 5) => {
   if (productId === undefined) {
     throw new Error('TypeError: ProductID must be included');
   }
   if (typeof parseInt(productId) !== 'number' || parseFloat(productId) !== parseInt(productId)) {
     throw new Error('ProductId must be an integer');
   }
+  db = await db.connect();
+  let results = [];
+  let finalResult;
+  try {
+    await db.query('BEGIN');
+    let questionResult = await getQuestionsFromDB(db, productId, page, count);
+    results.push(questionResult);
+    if (questionResult.length === 0) {
+      results.push({rows:[]});
+    } else {
+      let answersResult = await getAnswersFromDB(db, results[0]);
+      results.push(answersResult);
+    }
 
-  return getQuestionsFromDB(db, productId, page, count)
-    .then(result => {
-      if (result.length === 0) {
-        return [result, {rows:[]}];
+    if (results[1].rows.length === 0) {
+      results.push({rows:[]});
+    } else {
+      let photosResult = await getPhotosFromDB(db, results[1].rows);
+      results.push(photosResult);
+    }
+
+    let product_answer = {};
+
+    results[1].rows.map((val, idx) => {
+      if (product_answer[val.question_id] === undefined) {
+        product_answer[val.question_id] = [idx];
       } else {
-        return Promise.all([
-          result,
-          getAnswersFromDB(db, result)
-        ]);
+        product_answer[val.question_id].push(idx);
       }
-    })
-    .then(results => {
-      if (results[1].rows.length === 0) {
-        return [...results, {rows:[]}];
-      } else {
-        return Promise.all([
-          results[0],
-          results[1],
-          getPhotosFromDB(db, results[1].rows)
-        ]);
-      }
-    })
-    .then(results => {
-      let product_answer = {};
-
-      results[1].rows.map((val, idx) => {
-        if (product_answer[val.question_id] === undefined) {
-          product_answer[val.question_id] = [idx];
-        } else {
-          product_answer[val.question_id].push(idx);
-        }
-      });
-
-      let foundQuestions = Object.keys(product_answer);
-
-      let thisThing = JSON.parse(JSON.stringify(results[0]));
-
-      for (let i = 0; i < thisThing.length; i++) {
-        let question_id = thisThing[i]['question_id'];
-        thisThing[i].answers = {};
-        if (foundQuestions.includes(question_id.toString())) {
-          let answerIdx = product_answer[question_id.toString()];
-          for (let j = 0 ; j < answerIdx.length; j++) {
-            let answerId = results[1].rows[answerIdx[j]].answer_id;
-            let transformObject = (obj) => {
-              // Transforming the answer object information
-              obj.id = obj.answer_id;
-              obj.answerer_name = obj.name;
-              obj.date = new Date(parseInt(obj.date)).toISOString();
-              obj.photos = [];
-              results[2].rows.map(val => {
-                if (val.answer_id === obj.id.toString()) {
-                  obj.photos.push(val.url);
-                }
-              });
-
-              // Deleting irrelevant key value pairs
-              delete obj.answer_id;
-              delete obj.name;
-              delete obj.question_id;
-            }
-
-            // Transforming the question object to have the right shape
-            transformObject(results[1].rows[answerIdx[j]]);
-
-            // Assigning the answers object to the question object
-            thisThing[i]['answers'][answerId] = results[1].rows[answerIdx[j]];
-          }
-        }
-      }
-      return thisThing;
-    })
-    .catch(err => {
-      console.log(err);
-      return err;
     });
+
+    let foundQuestions = Object.keys(product_answer);
+
+    let thisThing = JSON.parse(JSON.stringify(results[0]));
+
+    for (let i = 0; i < thisThing.length; i++) {
+      let question_id = thisThing[i]['question_id'];
+      thisThing[i].answers = {};
+      if (foundQuestions.includes(question_id.toString())) {
+        let answerIdx = product_answer[question_id.toString()];
+        for (let j = 0 ; j < answerIdx.length; j++) {
+          let answerId = results[1].rows[answerIdx[j]].answer_id;
+          let transformObject = (obj) => {
+            // Transforming the answer object information
+            obj.id = obj.answer_id;
+            obj.answerer_name = obj.name;
+            obj.date = new Date(parseInt(obj.date)).toISOString();
+            obj.photos = [];
+            results[2].rows.map(val => {
+              if (val.answer_id === obj.id.toString()) {
+                obj.photos.push(val.url);
+              }
+            });
+
+            // Deleting irrelevant key value pairs
+            delete obj.answer_id;
+            delete obj.name;
+            delete obj.question_id;
+          }
+
+          // Transforming the question object to have the right shape
+          transformObject(results[1].rows[answerIdx[j]]);
+
+          // Assigning the answers object to the question object
+          thisThing[i]['answers'][answerId] = results[1].rows[answerIdx[j]];
+        }
+      }
+    }
+    finalResult = thisThing;
+
+    await db.query('COMMIT');
+  } catch (e) {
+    await db.query('ROLLBACK');
+    throw e;
+  } finally {
+    await db.release();
+  }
+
+  return finalResult;
 };
 
 let getAnswers = (db, questionId, page = 0, count = 5) => {
