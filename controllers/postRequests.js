@@ -43,7 +43,6 @@ VALUES (DEFAULT, $1, $2, $5, 0, B\'0\', (SELECT user_id FROM users WHERE name = 
     await db.query('COMMIT');
     finalRes = insertQuestionResult;
   } catch (e) {
-    console.log('Here it is: ', e)
     await db.query('ROLLBACK');
     finalRes = e;
     throw e;
@@ -103,7 +102,7 @@ let postAnswer = async (db, questionId, body, name, email, photos) => {
     let answerBody = 'INSERT INTO answers (answer_id, question_id, body, date, user_id, helpfulness, reported)\
     VALUES (DEFAULT, $1, $2, $5, (SELECT user_id FROM users WHERE name=$3 and email=$4), 0, B\'0\') RETURNING answer_id';
     let currDate = new Date();
-    let insertAnswer = db.query(answerBody, [questionId, body, name, email, Math.round(currDate.getTime() / 1000)]);
+    let insertAnswer = await db.query(answerBody, [questionId, body, name, email, Math.round(currDate.getTime() / 1000)]);
 
     if (insertAnswer?.rows?.[0]?.answer_id === undefined || photos.length === 0) {
       finalResult = insertAnswer;
@@ -118,10 +117,10 @@ let postAnswer = async (db, questionId, body, name, email, photos) => {
   } catch(e) {
     await db.query('ROLLBACK');
     throw e;
-  }finally {
+  } finally {
     db.release();
-    return finalResult;
   }
+  return finalResult;
 //   return db.query(insertUserQuery, [name, email])
 //     .then(results => {
 //       return results;
