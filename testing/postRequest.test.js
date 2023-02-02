@@ -12,7 +12,6 @@ describe('Post requests for questions should be functional', () => {
     let results = await postQuestion(client, questionBody, userName, email, productId);
     let finalQuestionCount = await client.query('SELECT count(*) FROM questions WHERE product_id = $1', [productId]);
 
-    console.log(results)
     expect(results.rows[0].question_id).not.toBe(undefined);
     expect(results.rowCount).toBe(1);
     expect(parseInt(previousQuestionCount.rows[0].count)).toBeLessThan(parseInt(finalQuestionCount.rows[0].count));
@@ -20,33 +19,34 @@ describe('Post requests for questions should be functional', () => {
     // reset the inserts that just happened
     await client.query('DELETE FROM questions WHERE product_id=\'71765\' and body=\'This is a test using my functions\'');
     await client.query('DELETE FROM users WHERE name=\'jstning\' and email=\'email\'');
-    console.log(client)
   }, 7500);
 
-  // it('Should put a post request in for a user that HAS been created', async () => {
-  //   let questionBody = 'This is a test using my functions with a user that has already been created';
-  //   let userName = 'Aaliyah.Abbott';
-  //   let email = 'Ardella.Collier43@gmail.com';
-  //   let productId = '1000010';
-  //   let previousQuestionCount = await client.query('SELECT count(*) FROM questions WHERE product_id = $1', [productId]);
-  //   let results = await postQuestion(client, questionBody, userName, email, productId);
-  //   let finalQuestionCount = await client.query('SELECT count(*) FROM questions WHERE product_id = $1', [productId]);
+  it('Should put a post request in for a user that HAS been created', async () => {
+    let questionBody = 'This is a test using my functions with a user that has already been created';
+    let userName = 'Aaliyah.Abbott';
+    let email = 'Ardella.Collier43@gmail.com';
+    let productId = '1000010';
+    let previousQuestionCount = await client.query('SELECT count(*) FROM questions WHERE product_id = $1', [productId]);
+    let results = await postQuestion(client, questionBody, userName, email, productId);
+    let finalQuestionCount = await client.query('SELECT count(*) FROM questions WHERE product_id = $1', [productId]);
 
-  //   expect(results.rows[0].question_id).not.toBe(undefined);
-  //   expect(results.rowCount).toBe(1);
-  //   expect(parseInt(previousQuestionCount.rows[0].count))
-  //     .toBeLessThan(parseInt(finalQuestionCount.rows[0].count));
+    expect(results.rows[0].question_id).not.toBe(undefined);
+    expect(results.rowCount).toBe(1);
+    expect(parseInt(previousQuestionCount.rows[0].count))
+      .toBeLessThan(parseInt(finalQuestionCount.rows[0].count));
 
-  //   // reset the inserts that just happened
-  //   await client.query('DELETE FROM questions WHERE product_id=$1 and body= $2', [productId, questionBody]);
-  // });
+    // reset the inserts that just happened
+    await client.query('DELETE FROM questions WHERE product_id=$1 and body= $2', [productId, questionBody]);
+  });
 
   // sad path
-  // it('Should throw an error if nothing is defined in the postquestion request', async () => {
-  //   let results = await postQuestion(client);
+  it('Should throw an error if nothing is defined in the postquestion request', async () => {
+    let test = async () => {
+      await postQuestion(client);
+    }
 
-  //   expect(results.severity).toBe('ERROR');
-  // });
+    await expect(test()).rejects.toThrow("null value in column \"name\" of relation \"users\" violates not-null constraint")
+  });
 });
 
 // describe('Post requests for answers should be functional', () => {
@@ -125,9 +125,8 @@ describe('Post requests for questions should be functional', () => {
 //   })
 // });
 
-afterAll(() => {
-  console.log('hi')
-  client.end(() => {
+afterAll(async () => {
+  await client.end(() => {
     console.log('Pool has ended');
   });
 })
