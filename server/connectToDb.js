@@ -1,6 +1,6 @@
 const {Client} = require('pg');
 const client = new Client ({
-  database: 'sdc'
+  database: 'test'
 });
 
 client.connect(err => {
