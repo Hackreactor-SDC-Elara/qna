@@ -1,22 +1,50 @@
 let format = require('pg-format');
 let {formatPhotos} = require('./helperFunctions.js');
 
-let postQuestion = (db, body, name, email, productId) => {
+// let postQuestion = (db, body, name, email, productId) => {
+//   // We will need to get the userID - this is where 205 currently is
+//   let insertUserQuery = 'INSERT INTO users VALUES (DEFAULT, $1, $2);';
+//   return db.query(insertUserQuery, [name, email])
+//     .then(results => {
+//       return results;
+//     })
+//     .catch(err => (err))
+//     .then(() => {
+//       let postQuestionQuery = 'INSERT INTO questions (question_id, product_id, body, date, helpfulness, reported, user_id) \
+// VALUES (DEFAULT, $1, $2, $5, 0, B\'0\', (SELECT user_id FROM users WHERE name = $3 and email = $4)) RETURNING question_id;';
+//       let currDate = new Date();
+//       return db.query(postQuestionQuery, [productId, body, name, email, Math.round(currDate.getTime() / 1000)])
+//         .then(results => (results))
+//         .catch(err => (err));
+//     });
+// };
+
+let postQuestion = async (db, body, name, email, productId) => {
   // We will need to get the userID - this is where 205 currently is
-  let insertUserQuery = 'INSERT INTO users VALUES (DEFAULT, $1, $2);';
-  return db.query(insertUserQuery, [name, email])
-    .then(results => {
-      return results;
-    })
-    .catch(err => (err))
-    .then(() => {
-      let postQuestionQuery = 'INSERT INTO questions (question_id, product_id, body, date, helpfulness, reported, user_id) \
+  db = await db.connect();
+  console.log(db)
+  let finalRes;
+  try {
+    await db.query('BEGIN');
+    let insertUserQuery = 'INSERT INTO users VALUES (DEFAULT, $1, $2);';
+    const userInsertResult = await db.query(insertUserQuery, [name, email]);
+
+    let postQuestionQuery = 'INSERT INTO questions (question_id, product_id, body, date, helpfulness, reported, user_id) \
 VALUES (DEFAULT, $1, $2, $5, 0, B\'0\', (SELECT user_id FROM users WHERE name = $3 and email = $4)) RETURNING question_id;';
-      let currDate = new Date();
-      return db.query(postQuestionQuery, [productId, body, name, email, Math.round(currDate.getTime() / 1000)])
-        .then(results => (results))
-        .catch(err => (err));
-    });
+    let currDate = new Date();
+    const insertQuestionResult = await db.query(postQuestionQuery, [productId, body, name, email, Math.round(currDate.getTime() / 1000)]);
+
+    await db.query('COMMIT');
+    finalRes = insertQuestionResult;
+  } catch (e) {
+    await db.query('ROLLBACK');
+    finalRes = e;
+    throw e;
+  } finally {
+    db.release();
+  }
+
+  return finalRes;
 };
 
 let postAnswer = (db, questionId, body, name, email, photos) => {
