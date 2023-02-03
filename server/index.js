@@ -1,6 +1,6 @@
 const express = require('express');
 const app = express();
-const PORT = 3001;
+const PORT = 3003;
 const {client} = require('./connectToDb.js');
 const {getQuestions, getAnswers} = require('../controllers/getRequests.js');
 const {postQuestion, postAnswer} = require('../controllers/postRequests.js');

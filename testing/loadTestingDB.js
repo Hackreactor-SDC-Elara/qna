@@ -2,10 +2,11 @@ import http from 'k6/http';
 import { sleep } from 'k6';
 
 export const options = {
-  vus: 100,
+  vus: 1000,
   duration: '30s',
 }
 export default function () {
-  http.get('http://localhost:3001/qa/questions?product_id=999888');
+  let ourVal = Math.ceil(Math.random(0, 1) * 999999);
+  http.get('http://localhost:3003/qa/questions?product_id=' + ourVal.toString());
   sleep(1);
 }
