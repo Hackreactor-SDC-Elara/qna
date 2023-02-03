@@ -1,14 +1,7 @@
-const {Client} = require('pg');
-const client = new Client ({
-  database: 'test'
-});
+const {Pool} = require('pg');
 
-client.connect(err => {
-  if (err) {
-    console.log(`There was an error when trying to connect with the db ${err}`);
-  } else {
-    return client;
-  }
+const client = new Pool({
+  database: 'sdc'
 })
 
 module.exports = {

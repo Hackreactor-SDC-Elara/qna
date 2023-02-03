@@ -50,57 +50,55 @@ describe('Testing the get questions function', () => {
 });
 
 
-// describe('Testing the get answers functions', () => {
-//   // Happy path for answers
-//   it('Should return the desired number of answers for a specified question id', async () => {
-//     let results = await getAnswers(client, '1', 1, 1);
+describe('Testing the get answers functions', () => {
+  // Happy path for answers
+  it('Should return the desired number of answers for a specified question id', async () => {
+    let results = await getAnswers(client, '1', 1, 1);
 
-//     expect(results.length).toBe(1);
-//     expect(results[0].answer_id).not.toBe(undefined);
-//     expect(results[0].name).not.toBe(undefined);
-//     expect(results[0].body).not.toBe(undefined);
-//     expect(results[0].date).not.toBe(undefined);
-//     expect(results[0].helpfulness).not.toBe(undefined);
-//     expect(results[0].photos).not.toBe(undefined);
-//   });
+    expect(results.length).toBe(1);
+    expect(results[0].answer_id).not.toBe(undefined);
+    expect(results[0].name).not.toBe(undefined);
+    expect(results[0].body).not.toBe(undefined);
+    expect(results[0].date).not.toBe(undefined);
+    expect(results[0].helpfulness).not.toBe(undefined);
+    expect(results[0].photos).not.toBe(undefined);
+  });
 
-//   // Happy path without page or count supplied
-//   it('Should return the default number of answers for a specific question id when page and or count are not specified', async ()=>{
-//     let results = await getAnswers(client, '1');
+  // Happy path without page or count supplied
+  it('Should return the default number of answers for a specific question id when page and or count are not specified', async ()=>{
+    let results = await getAnswers(client, '1');
 
-//     expect(results.length).toBe(5);
-//     expect(results[0].answer_id).not.toBe(undefined);
-//     expect(results[0].name).not.toBe(undefined);
-//     expect(results[0].body).not.toBe(undefined);
-//     expect(results[0].date).not.toBe(undefined);
-//     expect(results[0].helpfulness).not.toBe(undefined);
-//     expect(results[0].photos).not.toBe(undefined);
-//   });
+    expect(results.length).toBe(5);
+    expect(results[0].answer_id).not.toBe(undefined);
+    expect(results[0].name).not.toBe(undefined);
+    expect(results[0].body).not.toBe(undefined);
+    expect(results[0].date).not.toBe(undefined);
+    expect(results[0].helpfulness).not.toBe(undefined);
+    expect(results[0].photos).not.toBe(undefined);
+  });
 
-//   // Sad path
-//   it('Should throw an error for an invalid data type', async () => {
-//     expect(() => {
-//       getAnswers(client, 'asdf')
-//     }).toThrow('questionId must be an integer');
-//   });
+  // Sad path
+  it('Should throw an error for an invalid data type', async () => {
+    await expect(async () => {
+      await getAnswers(client, 'asdf')
+    }).rejects.toThrow('questionId must be an integer');
+  });
 
-//   // Sad path
-//   it('Should return nothing when not arguments are passed through', async () => {
-//     expect(() => {
-//       getAnswers(client);
-//     }).toThrow('TypeError: QuestionId must be included');
-//   });
+  // Sad path
+  it('Should return nothing when not arguments are passed through', async () => {
+    await expect(async () => {
+      await getAnswers(client);
+    }).rejects.toThrow('TypeError: QuestionId must be included');
+  });
 
-//   // Sad path
-//   it('Should return nothing for a question_id that doesnt exist', async () => {
-//     let results = await getAnswers(client, '-1');
+  // Sad path
+  it('Should return nothing for a question_id that doesnt exist', async () => {
+    let results = await getAnswers(client, '-1');
 
-//     expect(results.length).toBe(0);
-//   });
-// });
+    expect(results.length).toBe(0);
+  });
+});
 
 afterAll(async() => {
-  await client.end(() => {
-    console.log('connection terminated')
-  });
+  await client.end(() => {});
 })

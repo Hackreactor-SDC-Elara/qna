@@ -98,7 +98,48 @@ let getQuestions = async (db, productId, page, count = 5) => {
   return finalResult;
 };
 
-let getAnswers = (db, questionId, page = 0, count = 5) => {
+// let getAnswers = (db, questionId, page = 0, count = 5) => {
+//   if (questionId === undefined) {
+//     throw new Error('TypeError: QuestionId must be included');
+//   }
+
+//   if (typeof parseInt(questionId) !== 'number' || parseFloat(questionId) !== parseInt(questionId)) {
+//     throw new Error('questionId must be an integer');
+//   }
+
+//   return getAnswersFromDBAnswersRequest(db, questionId, page, count)
+//     .then(result => {
+//       if (result.rows.length === 0) {
+//         return [result.rows, {rows:[]}]
+//       }
+
+//       return Promise.all([
+//         result.rows,
+//         getPhotosFromDBAnswersRequest(db, result.rows)
+//       ]);
+//     })
+//     .then(results => {
+//       let answersIdx = results[0].map(val => {
+//         val.photos = [];
+//         return val.answer_id;
+//       });
+//       for (let i = 0; i < results[1].rows.length ; i++) {
+//         let answerId = results[1].rows[i].answer_id;
+//         let currentPhoto = results[1].rows[i];
+//         let currentAnswerIdx = answersIdx.indexOf(parseInt(answerId));
+
+//         currentPhoto.id = currentPhoto.photo_id;
+//         delete currentPhoto.answer_id;
+//         delete currentPhoto.photo_id;
+//         results[0][currentAnswerIdx]['photos'].push(currentPhoto);
+//       }
+
+//       return results[0];
+//     })
+//     .catch(err => (err));
+// };
+
+let getAnswers = async (db, questionId, page = 0, count = 5) => {
   if (questionId === undefined) {
     throw new Error('TypeError: QuestionId must be included');
   }
@@ -106,38 +147,49 @@ let getAnswers = (db, questionId, page = 0, count = 5) => {
   if (typeof parseInt(questionId) !== 'number' || parseFloat(questionId) !== parseInt(questionId)) {
     throw new Error('questionId must be an integer');
   }
+  db = await db.connect();
+  let results = [];
+  let finalResult;
+  try {
+    await db.query('BEGIN');
 
-  return getAnswersFromDBAnswersRequest(db, questionId, page, count)
-    .then(result => {
-      if (result.rows.length === 0) {
-        return [result.rows, {rows:[]}]
-      }
+    let answerResult = await getAnswersFromDBAnswersRequest(db, questionId, page, count);
+    results.push(answerResult.rows);
 
-      return Promise.all([
-        result.rows,
-        getPhotosFromDBAnswersRequest(db, result.rows)
-      ]);
-    })
-    .then(results => {
-      let answersIdx = results[0].map(val => {
-        val.photos = [];
-        return val.answer_id;
-      });
-      for (let i = 0; i < results[1].rows.length ; i++) {
-        let answerId = results[1].rows[i].answer_id;
-        let currentPhoto = results[1].rows[i];
-        let currentAnswerIdx = answersIdx.indexOf(parseInt(answerId));
+    if (answerResult.rows.length === 0) {
+      results.push({rows:[]});
+    } else {
+      let photoResult = await getPhotosFromDBAnswersRequest(db, results[0]);
+      results.push(photoResult);
+    }
 
-        currentPhoto.id = currentPhoto.photo_id;
-        delete currentPhoto.answer_id;
-        delete currentPhoto.photo_id;
-        results[0][currentAnswerIdx]['photos'].push(currentPhoto);
-      }
+    let answersIdx = results[0].map(val => {
+      val.photos = [];
+      return val.answer_id;
+    });
+    for (let i = 0; i < results[1].rows.length ; i++) {
+      let answerId = results[1].rows[i].answer_id;
+      let currentPhoto = results[1].rows[i];
+      let currentAnswerIdx = answersIdx.indexOf(parseInt(answerId));
 
-      return results[0];
-    })
-    .catch(err => (err));
-}
+      currentPhoto.id = currentPhoto.photo_id;
+      delete currentPhoto.answer_id;
+      delete currentPhoto.photo_id;
+      results[0][currentAnswerIdx]['photos'].push(currentPhoto);
+    }
+
+    finalResult = results[0];
+    await db.query('COMMIT');
+  } catch(e) {
+    await db.query('ROLLBACK');
+    throw e;
+  } finally {
+    db.release();
+  }
+
+  return finalResult;
+};
+
 
 module.exports = {
   getQuestions: getQuestions,
