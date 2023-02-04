@@ -11,8 +11,12 @@ CREATE TABLE if not exists temp_answers (
   helpful INTEGER
 );
 
+-- COPY temp_answers
+-- FROM '/Users/justinstendara/Documents/HackReactor/Git/seniorPhase/sdc/qna/input_data/answers.csv'
+-- csv header;
+
 COPY temp_answers
-FROM '/Users/justinstendara/Documents/HackReactor/Git/seniorPhase/sdc/qna/input_data/answers.csv'
+FROM '/Users/justinstendara/Documents/HackReactor/Git/seniorPhase/sdc/qna/etl/testETL/testAnswers.csv'
 csv header;
 
 ALTER TABLE temp_answers ADD user_id INTEGER;
@@ -27,11 +31,9 @@ ALTER TABLE temp_answers DROP COLUMN answerer_name;
 ALTER TABLE temp_answers DROP COLUMN answerer_email;
 ALTER TABLE temp_answers RENAME COLUMN date_written TO date;
 
-BEGIN
-  INSERT INTO answers (answer_id, question_id, body, helpfulness, reported, date, user_id)
-  SELECT id, question_id, body, helpful, reported, date, user_id
-  FROM temp_answers
-COMMIT;
+INSERT INTO answers (answer_id, question_id, body, helpfulness, reported, date, user_id)
+SELECT id, question_id, body, helpful, reported, date, user_id
+FROM temp_answers;
 
 DROP TABLE temp_answers;
 SELECT setval('answers_answer_id_seq', (SELECT MAX(answer_id) from "answers"));

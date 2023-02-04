@@ -1,5 +1,10 @@
+-- COPY photos
+-- FROM '/Users/justinstendara/Documents/HackReactor/Git/seniorPhase/sdc/qna/input_data/answers_photos.csv'
+-- csv header;
+ALTER TABLE photos
+DROP CONSTRAINT fk_answer;
 COPY photos
-FROM '/Users/justinstendara/Documents/HackReactor/Git/seniorPhase/sdc/qna/input_data/answers_photos.csv'
+FROM '/Users/justinstendara/Documents/HackReactor/Git/seniorPhase/sdc/qna/etl/testETL/testAnswerPhotos.csv'
 csv header;
 
 SELECT setval('photos_photo_id_seq', (SELECT MAX(photo_id) from "photos"));

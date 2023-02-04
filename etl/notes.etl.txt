@@ -13,7 +13,18 @@ And my database looks like this:
 When performing ETL follow the process outlined below:
 1. run the userData.js script within this directory to generate the myTest.csv file
 2. run the db.sql file in the postgres console
+  - \i '/Users/justinstendara/Documents/HackReactor/Git/seniorPhase/sdc/qna/db.sql'
 3. run the userData.sql commands
+  - \i '/Users/justinstendara/Documents/HackReactor/Git/seniorPhase/sdc/qna/etl/userData.sql'
 4. run the questionDataMerge.sql commands
+  - \i '/Users/justinstendara/Documents/HackReactor/Git/seniorPhase/sdc/qna/etl/questionDataMerge.sql'
 5. run the answersDataMerge.sql commands
+  - \i '/Users/justinstendara/Documents/HackReactor/Git/seniorPhase/sdc/qna/etl/answersDataMerge.sql'
 6. run the photosDataMerge.sql commands
+  - \i '/Users/justinstendara/Documents/HackReactor/Git/seniorPhase/sdc/qna/etl/photosDataMerge.sql'
+
+\i '/Users/justinstendara/Documents/HackReactor/Git/seniorPhase/sdc/qna/db.sql';
+\i '/Users/justinstendara/Documents/HackReactor/Git/seniorPhase/sdc/qna/etl/userData.sql';
+\i '/Users/justinstendara/Documents/HackReactor/Git/seniorPhase/sdc/qna/etl/questionDataMerge.sql';
+\i '/Users/justinstendara/Documents/HackReactor/Git/seniorPhase/sdc/qna/etl/answersDataMerge.sql';
+\i '/Users/justinstendara/Documents/HackReactor/Git/seniorPhase/sdc/qna/etl/photosDataMerge.sql';

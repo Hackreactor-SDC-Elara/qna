@@ -21,9 +21,9 @@ CREATE TABLE if not exists questions (
   product_id VARCHAR(7) NOT NULL,
   body VARCHAR(1000) NOT NULL,
   date BIGINT NOT NULL,
-  helpfulness INTEGER NOT NULL,
-  reported BIT(1) NOT NULL,
-  user_id INTEGER NOT NULL,
+  helpfulness INTEGER DEFAULT 0,
+  reported BIT(1) DEFAULT B'0',
+  user_id INTEGER DEFAULT 0,
   CONSTRAINT fk_user
     FOREIGN KEY (user_id)
       REFERENCES users(user_id)
@@ -31,12 +31,12 @@ CREATE TABLE if not exists questions (
 
 CREATE TABLE if not exists answers (
   answer_id SERIAL PRIMARY KEY,
-  question_id BIGINT NOT NULL,
-  body VARCHAR(1000) NOT NULL,
-  date BIGINT NOT NULL,
-  user_id BIGINT NOT NULL,
-  helpfulness BIGINT NOT NULL,
-  reported BIT(1) NOT NULL,
+  question_id BIGINT NULL,
+  body VARCHAR(1000) NULL,
+  date BIGINT NULL,
+  user_id BIGINT DEFAULT 0,
+  helpfulness BIGINT DEFAULT 0,
+  reported BIT(1) DEFAULT B'0',
   CONSTRAINT fk_question
     FOREIGN KEY (question_id)
       REFERENCES questions(question_id),
@@ -47,7 +47,7 @@ CREATE TABLE if not exists answers (
 
 CREATE TABLE if not exists photos (
   photo_id SERIAL PRIMARY KEY,
-  answer_id BIGINT,
+  answer_id BIGINT DEFAULT 0,
   url VARCHAR(2048),
   CONSTRAINT fk_answer
     FOREIGN KEY (answer_id)
