@@ -3,4 +3,3 @@ input_data/
 .env
 package-lock.json
 coverage
-testETL/
