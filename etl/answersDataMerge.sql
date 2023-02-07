@@ -1,27 +1,27 @@
--- This is for testing
-DROP TABLE answers CASCADE;
+-- -- This is for testing
+-- DROP TABLE answers CASCADE;
 
-CREATE TABLE if not exists answers (
-  answer_id SERIAL PRIMARY KEY,
-  question_id BIGINT NULL,
-  body VARCHAR(1000) NULL,
-  date BIGINT NULL,
-  user_id BIGINT DEFAULT 0,
-  helpfulness BIGINT DEFAULT 0,
-  reported BIT(1) DEFAULT B'0',
-  CONSTRAINT fk_question
-    FOREIGN KEY (question_id)
-      REFERENCES questions(question_id),
-  CONSTRAINT fk_user
-    FOREIGN KEY (user_id)
-      REFERENCES users(user_id)
-);
+-- CREATE TABLE if not exists answers (
+--   answer_id SERIAL PRIMARY KEY,
+--   question_id BIGINT NULL,
+--   body VARCHAR(1000) NULL,
+--   date BIGINT NULL,
+--   user_id BIGINT DEFAULT 0,
+--   helpfulness BIGINT DEFAULT 0,
+--   reported BIT(1) DEFAULT B'0',
+--   CONSTRAINT fk_question
+--     FOREIGN KEY (question_id)
+--       REFERENCES questions(question_id),
+--   CONSTRAINT fk_user
+--     FOREIGN KEY (user_id)
+--       REFERENCES users(user_id)
+-- );
 
-DROP INDEX answer_questions_ids;
-DROP INDEX answer_answer_ids;
-DROP INDEX answer_user_ids;
+-- DROP INDEX answer_questions_ids;
+-- DROP INDEX answer_answer_ids;
+-- DROP INDEX answer_user_ids;
 
--- This is for testing
+-- -- This is for testing
 
 DROP TABLE IF EXISTS temp_answers;
 
@@ -36,13 +36,13 @@ CREATE TABLE if not exists temp_answers (
   helpful INTEGER
 );
 
--- COPY temp_answers
--- FROM '/Users/justinstendara/Documents/HackReactor/Git/seniorPhase/sdc/qna/input_data/answers.csv'
--- csv header;
-
 COPY temp_answers
-FROM '/Users/justinstendara/Documents/HackReactor/Git/seniorPhase/sdc/qna/etl/testETL/testAnswers.csv'
+FROM '/Users/justinstendara/Documents/HackReactor/Git/seniorPhase/sdc/qna/input_data/answers.csv'
 csv header;
+
+-- COPY temp_answers
+-- FROM '/Users/justinstendara/Documents/HackReactor/Git/seniorPhase/sdc/qna/etl/testETL/testAnswers.csv'
+-- csv header;
 
 ALTER TABLE temp_answers ADD user_id INTEGER;
 
@@ -55,6 +55,8 @@ WHERE temp_answers.answerer_name = u.name and temp_answers.answerer_email = u.em
 ALTER TABLE temp_answers DROP COLUMN answerer_name;
 ALTER TABLE temp_answers DROP COLUMN answerer_email;
 ALTER TABLE temp_answers RENAME COLUMN date_written TO date;
+ALTER TABLE temp_answers RENAME COLUMN helpful TO helpfulness;
+ALTER TABLE temp_answers RENAME COLUMN id TO answer_id;
 
 ALTER TABLE answers
 DROP CONSTRAINT fk_question;
@@ -62,9 +64,18 @@ DROP CONSTRAINT fk_question;
 ALTER TABLE answers
 DROP CONSTRAINT fk_user;
 
-INSERT INTO answers (answer_id, question_id, body, helpfulness, reported, date, user_id)
-SELECT id, question_id, body, helpful, reported, date, user_id
-FROM temp_answers;
+COPY (SELECT DISTINCT answer_id, question_id, body, helpfulness, reported, date, user_id
+FROM temp_answers)
+TO '/Users/justinstendara/Documents/HackReactor/Git/seniorPhase/sdc/qna/etl/testETL/temp_answers_table.csv'
+CSV HEADER;
+
+-- INSERT INTO answers (answer_id, question_id, body, helpfulness, reported, date, user_id)
+-- SELECT id, question_id, body, helpful, reported, date, user_id
+-- FROM temp_answers;
+
+COPY answers (answer_id, question_id, body, helpfulness, reported, date, user_id)
+FROM '/Users/justinstendara/Documents/HackReactor/Git/seniorPhase/sdc/qna/etl/testETL/temp_answers_table.csv'
+CSV HEADER;
 
 DROP TABLE temp_answers;
 SELECT setval('answers_answer_id_seq', (SELECT MAX(answer_id) from "answers"));

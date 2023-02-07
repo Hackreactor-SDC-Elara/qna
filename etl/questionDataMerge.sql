@@ -1,22 +1,22 @@
 -- Will remove later
-DROP TABLE questions;
+-- DROP TABLE questions;
 
-CREATE TABLE if not exists questions (
-  question_id SERIAL PRIMARY KEY,
-  product_id VARCHAR(7) NOT NULL,
-  body VARCHAR(1000) NOT NULL,
-  date BIGINT NOT NULL,
-  helpfulness INTEGER DEFAULT 0,
-  reported BIT(1) DEFAULT B'0',
-  user_id INTEGER DEFAULT 0,
-  CONSTRAINT fk_user
-    FOREIGN KEY (user_id)
-      REFERENCES users(user_id)
-);
+-- CREATE TABLE if not exists questions (
+--   question_id SERIAL PRIMARY KEY,
+--   product_id VARCHAR(7) NOT NULL,
+--   body VARCHAR(1000) NOT NULL,
+--   date BIGINT NOT NULL,
+--   helpfulness INTEGER DEFAULT 0,
+--   reported BIT(1) DEFAULT B'0',
+--   user_id INTEGER DEFAULT 0,
+--   CONSTRAINT fk_user
+--     FOREIGN KEY (user_id)
+--       REFERENCES users(user_id)
+-- );
 
-drop index question_answer_ids;
-drop index question_user_ids;
--- Will remove later
+-- drop index question_answer_ids;
+-- drop index question_user_ids;
+-- -- Will remove later
 
 DROP TABLE IF EXISTS temp_questions;
 
@@ -31,13 +31,13 @@ CREATE TABLE if not exists temp_questions (
   helpful INTEGER
 );
 
--- COPY temp_questions
--- FROM '/Users/justinstendara/Documents/HackReactor/Git/seniorPhase/sdc/qna/input_data/questions.csv'
--- csv header;
-
 COPY temp_questions
-FROM '/Users/justinstendara/Documents/HackReactor/Git/seniorPhase/sdc/qna/etl/testETL/testQuestions.csv'
+FROM '/Users/justinstendara/Documents/HackReactor/Git/seniorPhase/sdc/qna/input_data/questions.csv'
 csv header;
+
+-- COPY temp_questions
+-- FROM '/Users/justinstendara/Documents/HackReactor/Git/seniorPhase/sdc/qna/etl/testETL/testQuestions.csv'
+-- csv header;
 
 ALTER TABLE temp_questions ADD user_id INTEGER;
 
@@ -50,13 +50,23 @@ WHERE temp_questions.asker_name = u.name and temp_questions.asker_email = u.emai
 ALTER TABLE temp_questions DROP COLUMN asker_name;
 ALTER TABLE temp_questions DROP COLUMN asker_email;
 ALTER TABLE temp_questions RENAME COLUMN date_written TO date;
+ALTER TABLE temp_questions RENAME COLUMN helpful TO helpfulness;
+
+COPY (SELECT DISTINCT question_id, product_id, body, helpfulness, reported, date, user_id
+FROM temp_questions)
+TO '/Users/justinstendara/Documents/HackReactor/Git/seniorPhase/sdc/qna/etl/testETL/temp_question_table.csv'
+header csv;
 
 ALTER TABLE questions
 DROP CONSTRAINT fk_user;
 
-INSERT INTO questions (question_id, product_id, body, helpfulness, reported, date, user_id)
-SELECT DISTINCT question_id, product_id, body, helpful, reported,  date, user_id
-FROM temp_questions;
+-- INSERT INTO questions (question_id, product_id, body, helpfulness, reported, date, user_id)
+-- SELECT DISTINCT question_id, product_id, body, helpfulness, reported,  date, user_id
+-- FROM temp_questions;
+
+COPY questions (question_id,product_id,body,helpfulness,reported,date,user_id)
+FROM '/Users/justinstendara/Documents/HackReactor/Git/seniorPhase/sdc/qna/etl/testETL/temp_question_table.csv'
+CSV HEADER;
 
 DROP TABLE temp_questions;
 SELECT setval('questions_question_id_seq', (SELECT MAX(question_id) from "questions"));
