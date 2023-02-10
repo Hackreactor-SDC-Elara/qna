@@ -36,13 +36,13 @@ CREATE TABLE if not exists temp_answers (
   helpful INTEGER
 );
 
--- COPY temp_answers
--- FROM '/Users/justinstendara/Documents/HackReactor/Git/seniorPhase/sdc/qna/input_data/answers.csv'
--- csv header;
-
 COPY temp_answers
-FROM '/Users/justinstendara/Documents/HackReactor/Git/seniorPhase/sdc/qna/etl/testETL/test_answers.csv'
+FROM '/Users/justinstendara/Documents/HackReactor/Git/seniorPhase/sdc/qna/input_data/answers.csv'
 csv header;
+
+-- COPY temp_answers
+-- FROM '/Users/justinstendara/Documents/HackReactor/Git/seniorPhase/sdc/qna/etl/testETL/test_answers.csv'
+-- csv header;
 
 ALTER TABLE temp_answers ADD user_id INTEGER;
 

@@ -1,6 +1,7 @@
 node_modules/
-input_data/
+# input_data/
 .env
 package-lock.json
 coverage
-testETL/
+*.csv
+qna-sdc.pem
