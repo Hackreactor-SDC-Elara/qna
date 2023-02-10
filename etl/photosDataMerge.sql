@@ -20,7 +20,7 @@ FROM '/Users/justinstendara/Documents/HackReactor/Git/seniorPhase/sdc/qna/input_
 csv header;
 
 -- COPY photos
--- FROM '/Users/justinstendara/Documents/HackReactor/Git/seniorPhase/sdc/qna/etl/testETL/testAnswerPhotos.csv'
+-- FROM '/Users/justinstendara/Documents/HackReactor/Git/seniorPhase/sdc/qna/etl/testETL/test_photos.csv'
 -- csv header;
 
 ALTER TABLE photos

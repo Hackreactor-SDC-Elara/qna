@@ -18,12 +18,12 @@ SELECT *
 FROM users
 WITH NO DATA;
 
-COPY temp_users_table
-FROM '/Users/justinstendara/Documents/HackReactor/Git/seniorPhase/sdc/qna/input_data/myTest.csv'
-csv header;
 -- COPY temp_users_table
--- FROM '/Users/justinstendara/Documents/HackReactor/Git/seniorPhase/sdc/qna/etl/testETL/usersMyTest.csv'
+-- FROM '/Users/justinstendara/Documents/HackReactor/Git/seniorPhase/sdc/qna/input_data/myTest.csv'
 -- csv header;
+COPY temp_users_table
+FROM '/Users/justinstendara/Documents/HackReactor/Git/seniorPhase/sdc/qna/etl/testETL/test_users.csv'
+csv header;
 
 INSERT INTO users (name, email)
 SELECT DISTINCT name, email

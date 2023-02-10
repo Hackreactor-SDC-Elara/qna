@@ -36,7 +36,7 @@ FROM '/Users/justinstendara/Documents/HackReactor/Git/seniorPhase/sdc/qna/input_
 csv header;
 
 -- COPY temp_questions
--- FROM '/Users/justinstendara/Documents/HackReactor/Git/seniorPhase/sdc/qna/etl/testETL/testQuestions.csv'
+-- FROM '/Users/justinstendara/Documents/HackReactor/Git/seniorPhase/sdc/qna/etl/testETL/test_questions.csv'
 -- csv header;
 
 ALTER TABLE temp_questions ADD user_id INTEGER;

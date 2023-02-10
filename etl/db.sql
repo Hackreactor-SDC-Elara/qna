@@ -48,8 +48,8 @@ CREATE TABLE if not exists answers (
 CREATE TABLE if not exists photos (
   photo_id SERIAL PRIMARY KEY,
   answer_id BIGINT DEFAULT 0,
-  url VARCHAR(2048),
-  CONSTRAINT fk_answer
-    FOREIGN KEY (answer_id)
-      REFERENCES answers (answer_id)
+  url VARCHAR(2048)
+  -- CONSTRAINT fk_answer
+  --   FOREIGN KEY (answer_id)
+  --     REFERENCES answers (answer_id)
 );

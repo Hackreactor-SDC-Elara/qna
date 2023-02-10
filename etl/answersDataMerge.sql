@@ -36,13 +36,13 @@ CREATE TABLE if not exists temp_answers (
   helpful INTEGER
 );
 
-COPY temp_answers
-FROM '/Users/justinstendara/Documents/HackReactor/Git/seniorPhase/sdc/qna/input_data/answers.csv'
-csv header;
-
 -- COPY temp_answers
--- FROM '/Users/justinstendara/Documents/HackReactor/Git/seniorPhase/sdc/qna/etl/testETL/testAnswers.csv'
+-- FROM '/Users/justinstendara/Documents/HackReactor/Git/seniorPhase/sdc/qna/input_data/answers.csv'
 -- csv header;
+
+COPY temp_answers
+FROM '/Users/justinstendara/Documents/HackReactor/Git/seniorPhase/sdc/qna/etl/testETL/test_answers.csv'
+csv header;
 
 ALTER TABLE temp_answers ADD user_id INTEGER;
 
@@ -84,14 +84,14 @@ CREATE INDEX answer_questions_ids ON answers (question_id);
 CREATE INDEX answer_answer_ids ON answers (answer_id);
 CREATE INDEX answer_user_ids ON answers (user_id);
 
-ALTER TABLE answers
-ADD CONSTRAINT fk_question
-FOREIGN KEY (question_id)
-REFERENCES questions (question_id);
+-- ALTER TABLE answers
+-- ADD CONSTRAINT fk_question
+-- FOREIGN KEY (question_id)
+-- REFERENCES questions (question_id);
 
-ALTER TABLE answers
-ADD CONSTRAINT fk_user
-FOREIGN KEY (user_id)
-REFERENCES users (user_id);
+-- ALTER TABLE answers
+-- ADD CONSTRAINT fk_user
+-- FOREIGN KEY (user_id)
+-- REFERENCES users (user_id);
 
 ANALYZE answers;
