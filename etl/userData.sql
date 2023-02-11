@@ -19,7 +19,7 @@ FROM users
 WITH NO DATA;
 
 COPY temp_users_table
-FROM '/Users/justinstendara/Documents/HackReactor/Git/seniorPhase/sdc/qna/input_data/myTest.csv'
+FROM '/var/lib/pgsql/data/myTest.csv'
 csv header;
 -- COPY temp_users_table
 -- FROM '/Users/justinstendara/Documents/HackReactor/Git/seniorPhase/sdc/qna/etl/testETL/test_users.csv'

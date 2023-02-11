@@ -37,7 +37,7 @@ CREATE TABLE if not exists temp_answers (
 );
 
 COPY temp_answers
-FROM '/Users/justinstendara/Documents/HackReactor/Git/seniorPhase/sdc/qna/input_data/answers.csv'
+FROM '/var/lib/pgsql/data/answers.csv'
 csv header;
 
 -- COPY temp_answers
@@ -66,7 +66,7 @@ DROP CONSTRAINT fk_user;
 
 COPY (SELECT DISTINCT answer_id, question_id, body, helpfulness, reported, date, user_id
 FROM temp_answers)
-TO '/Users/justinstendara/Documents/HackReactor/Git/seniorPhase/sdc/qna/etl/testETL/temp_answers_table.csv'
+TO '/usr/src/app/testETL/temp_answers_table.csv'
 CSV HEADER;
 
 -- INSERT INTO answers (answer_id, question_id, body, helpfulness, reported, date, user_id)
@@ -74,7 +74,7 @@ CSV HEADER;
 -- FROM temp_answers;
 
 COPY answers (answer_id, question_id, body, helpfulness, reported, date, user_id)
-FROM '/Users/justinstendara/Documents/HackReactor/Git/seniorPhase/sdc/qna/etl/testETL/temp_answers_table.csv'
+FROM '/usr/src/app/testETL/temp_answers_table.csv'
 CSV HEADER;
 
 DROP TABLE temp_answers;

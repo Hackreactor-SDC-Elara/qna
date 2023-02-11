@@ -1,0 +1,15 @@
+services:
+  postgres:
+    image: postgres:14.6
+    ports:
+      - "5432:5432"
+    restart: always
+    container_name: sdc
+    environment:
+      POSTGRES_USER: justin8912
+      POSTGRES_PASSWORD: 'password'
+      POSTGRES_DB: sdc
+    volumes:
+      - ../input_data:/var/lib/pgsql/data
+      - ./db.sql:/docker-entrypoint-initdb.d/setup.sql
+      - ./:/usr/src/app
