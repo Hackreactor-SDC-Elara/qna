@@ -9,6 +9,9 @@ const {helpfulAnswer, helpfulQuestion, reportAnswer, reportQuestion} =
 
 const {formatPhotosArrayServer} = require('../controllers/helperFunctions.js');
 
+app.use(express.json());
+app.use(express.urlencoded({extended: true}));
+
 app.get('/', (req, res) => {
   console.log('User has landed!');
   res.send('hi');
