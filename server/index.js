@@ -17,6 +17,9 @@ app.get('/', (req, res) => {
   res.send('hi');
 })
 
+app.get('/loaderio-2d3782bad4f2b16af6678893db334fe7.txt', (req, res) => {
+  res.send('loaderio-2d3782bad4f2b16af6678893db334fe7');
+})
 // GET '/qa/questions' => requires product_id, page, count
 //   Should return 200 if it was completed
 app.get('/qa/questions', async (req, res) => {
