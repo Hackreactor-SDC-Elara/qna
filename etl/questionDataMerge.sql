@@ -32,7 +32,7 @@ CREATE TABLE if not exists temp_questions (
 );
 
 COPY temp_questions
-FROM '/var/lib/pgsql/data/questions.csv'
+FROM '/Users/justinstendara/Documents/HackReactor/Git/seniorPhase/sdc/qna/input_data/questions.csv'
 csv header;
 
 -- COPY temp_questions
@@ -54,7 +54,7 @@ ALTER TABLE temp_questions RENAME COLUMN helpful TO helpfulness;
 
 COPY (SELECT DISTINCT question_id, product_id, body, helpfulness, reported, date, user_id
 FROM temp_questions)
-TO '/usr/src/app/testETL/temp_question_table.csv'
+TO '/Users/justinstendara/Documents/HackReactor/Git/seniorPhase/sdc/qna/etl/testETL/temp_question_table.csv'
 header csv;
 
 ALTER TABLE questions
@@ -65,7 +65,7 @@ DROP CONSTRAINT fk_user;
 -- FROM temp_questions;
 
 COPY questions (question_id,product_id,body,helpfulness,reported,date,user_id)
-FROM '/usr/src/app/testETL/temp_question_table.csv'
+FROM '/Users/justinstendara/Documents/HackReactor/Git/seniorPhase/sdc/qna/etl/testETL/temp_question_table.csv'
 CSV HEADER;
 
 DROP TABLE temp_questions;

@@ -16,7 +16,7 @@
 
 
 COPY photos
-FROM '/var/lib/pgsql/data/answers_photos.csv'
+FROM '/Users/justinstendara/Documents/HackReactor/Git/seniorPhase/sdc/qna/input_data/answers_photos.csv'
 csv header;
 
 -- COPY photos
