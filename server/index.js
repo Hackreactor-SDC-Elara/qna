@@ -1,6 +1,6 @@
 const express = require('express');
 const app = express();
-const PORT = 3003;
+const PORT = 3000;
 const {client} = require('./connectToDb.js');
 const {getQuestions, getAnswers} = require('../controllers/getRequests.js');
 const {postQuestion, postAnswer} = require('../controllers/postRequests.js');
@@ -18,7 +18,7 @@ app.get('/', (req, res) => {
 })
 
 app.get('/loaderio-2d3782bad4f2b16af6678893db334fe7.txt', (req, res) => {
-  res.sendFile('./loader.io.txt');
+  res.sendFile('./loaderio-2d3782bad4f2b16af6678893db334fe7.txt');
 })
 // GET '/qa/questions' => requires product_id, page, count
 //   Should return 200 if it was completed
