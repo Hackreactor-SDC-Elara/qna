@@ -8,24 +8,24 @@ describe('Testing the get questions function', () => {
 
     expect(result.length).toEqual(1);
     expect(result[0].question_id).not.toBe(undefined);
-    expect(result[0].body).not.toBe(undefined);
+    expect(result[0].question_body).not.toBe(undefined);
     expect(result[0].date).not.toBe(undefined);
-    expect(result[0].helpfulness).not.toBe(undefined);
+    expect(result[0].question_helpfulness).not.toBe(undefined);
     expect(result[0].reported).not.toBe(undefined);
-    expect(result[0].name).not.toBe(undefined);
+    expect(result[0].asker_name).not.toBe(undefined);
   });
 
   // Happy test without arguments for page and count
   it('Should grab 5 questions when the number of questions was not specified', async () => {
-    let result = await getQuestions(client, '71705')
+    let result = await getQuestions(client, '1')
 
     expect(result.length).toEqual(5);
     expect(result[0].question_id).not.toBe(undefined);
-    expect(result[0].body).not.toBe(undefined);
+    expect(result[0].question_body).not.toBe(undefined);
     expect(result[0].date).not.toBe(undefined);
-    expect(result[0].helpfulness).not.toBe(undefined);
+    expect(result[0].question_helpfulness).not.toBe(undefined);
     expect(result[0].reported).not.toBe(undefined);
-    expect(result[0].name).not.toBe(undefined);
+    expect(result[0].asker_name).not.toBe(undefined);
   });
 
   // Sad path without arguments for page and count

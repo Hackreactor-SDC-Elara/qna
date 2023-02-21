@@ -2,7 +2,8 @@ let format = require('pg-format');
 
 let getQuestionsFromDB = (db, productId, page, count) => {
   return new Promise ((resolve, reject) => {
-    let query = 'SELECT q.question_id, q.body, q.date, q.helpfulness, q.reported, u.name \
+
+    let query = 'SELECT q.question_id, q.body as question_body, q.date, q.helpfulness as question_helpfulness, q.reported, u.name as asker_name \
 FROM questions q INNER JOIN users u ON u.user_id = q.user_id \
 WHERE q.product_id in ($1) ORDER BY helpfulness DESC LIMIT $2';
 

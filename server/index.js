@@ -27,21 +27,20 @@ app.get('/qa/questions', async (req, res) => {
   let productId = req.query.product_id;
   // console.log('User has requested question information with the following parameters: ', req.query);
   let wrapperObj = {product_id: productId};
+  console.log('hi')
   getQuestions(client, productId, req.query.page, req.query.count)
     .then(results => {
+      console.log('results: ', results)
       let questionObj = results.map((val) => {
-        val.question_body = val.body;
         val.question_date = new Date(parseInt(val.date)).toISOString();
-        val.asker_name = val.name;
-        val.question_helpfulness = val.helpfulness;
         val.reported = Boolean(parseInt(val.reported)) ? true : false;
 
         return {
           question_id: val.question_id,
-          question_body: val.body,
+          question_body: val.question_body,
           question_date: val.question_date,
-          asker_name: val.name,
-          question_helpfulness: val.helpfulness,
+          asker_name: val.asker_name,
+          question_helpfulness: val.question_helpfulness,
           reported:  Boolean(parseInt(val.reported)) ? true : false,
           answers: val.answers
         }

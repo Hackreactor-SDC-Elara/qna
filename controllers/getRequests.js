@@ -22,7 +22,9 @@ let getQuestions = async (db, productId, page, count = 5) => {
   let finalResult;
   try {
     await db.query('BEGIN');
+    console.log('starting');
     let questionResult = await getQuestionsFromDB(db, productId, page, count);
+    console.log('finished questionResults')
     results.push(questionResult);
     if (questionResult.length === 0) {
       results.push({rows:[]});
@@ -97,47 +99,6 @@ let getQuestions = async (db, productId, page, count = 5) => {
 
   return finalResult;
 };
-
-// let getAnswers = (db, questionId, page = 0, count = 5) => {
-//   if (questionId === undefined) {
-//     throw new Error('TypeError: QuestionId must be included');
-//   }
-
-//   if (typeof parseInt(questionId) !== 'number' || parseFloat(questionId) !== parseInt(questionId)) {
-//     throw new Error('questionId must be an integer');
-//   }
-
-//   return getAnswersFromDBAnswersRequest(db, questionId, page, count)
-//     .then(result => {
-//       if (result.rows.length === 0) {
-//         return [result.rows, {rows:[]}]
-//       }
-
-//       return Promise.all([
-//         result.rows,
-//         getPhotosFromDBAnswersRequest(db, result.rows)
-//       ]);
-//     })
-//     .then(results => {
-//       let answersIdx = results[0].map(val => {
-//         val.photos = [];
-//         return val.answer_id;
-//       });
-//       for (let i = 0; i < results[1].rows.length ; i++) {
-//         let answerId = results[1].rows[i].answer_id;
-//         let currentPhoto = results[1].rows[i];
-//         let currentAnswerIdx = answersIdx.indexOf(parseInt(answerId));
-
-//         currentPhoto.id = currentPhoto.photo_id;
-//         delete currentPhoto.answer_id;
-//         delete currentPhoto.photo_id;
-//         results[0][currentAnswerIdx]['photos'].push(currentPhoto);
-//       }
-
-//       return results[0];
-//     })
-//     .catch(err => (err));
-// };
 
 let getAnswers = async (db, questionId, page = 0, count = 5) => {
   if (questionId === undefined) {
