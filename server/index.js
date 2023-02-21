@@ -18,7 +18,7 @@ app.get('/', (req, res) => {
 });
 
 app.get('/loaderio-2d3782bad4f2b16af6678893db334fe7.txt', (req, res) => {
-  res.sendFile('./loaderio-2d3782bad4f2b16af6678893db334fe7.txt');
+  res.sendFile('/home/ubuntu/qna/server/loaderio-2d3782bad4f2b16af6678893db334fe7.txt');
 })
 
 const servers = ['http://3.17.204.141', 'http://18.221.13.223:3000'];
