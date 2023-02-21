@@ -18,7 +18,7 @@ WHERE q.product_id in ($1) ORDER BY helpfulness DESC LIMIT $2';
 };
 
 let getAnswersFromDB = (db, questions) => {
-  let answersQuery = 'SELECT a.answer_id, a.body, a.date, a.helpfulness, u.name, a.question_id \
+  let answersQuery = 'SELECT a.body, a.answer_id, a.date, a.helpfulness, u.name, a.question_id \
 FROM answers a \
 INNER JOIN users u ON u.user_id = a.user_id \
 WHERE a.question_id IN (%s)';

@@ -4,5 +4,4 @@ node_modules/
 package-lock.json
 coverage
 *.csv
-sdc-qna-3.pem
-sdc-qna-4.pem
+sdc-qna*.pem
