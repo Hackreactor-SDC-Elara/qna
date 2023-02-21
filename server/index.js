@@ -14,9 +14,8 @@ app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 
 app.get('/', (req, res) => {
-  console.log('User has landed!');
   res.send('hi');
-})
+});
 
 app.get('/loaderio-2d3782bad4f2b16af6678893db334fe7.txt', (req, res) => {
   res.sendFile('./loaderio-2d3782bad4f2b16af6678893db334fe7.txt');
@@ -33,6 +32,7 @@ const handler = (req, res) => {
 }
 
 app.get('*', handler).post('*', handler);
+
 app.listen(PORT, () => {
   console.log(`Server up, listening to port ${PORT}`);
 });
