@@ -22,9 +22,7 @@ let getQuestions = async (db, productId, page, count = 5) => {
   let finalResult;
   try {
     await db.query('BEGIN');
-    console.log('starting');
     let questionResult = await getQuestionsFromDB(db, productId, page, count);
-    console.log('finished questionResults')
     results.push(questionResult);
     if (questionResult.length === 0) {
       results.push({rows:[]});

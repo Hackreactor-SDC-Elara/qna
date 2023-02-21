@@ -27,10 +27,8 @@ app.get('/qa/questions', async (req, res) => {
   let productId = req.query.product_id;
   // console.log('User has requested question information with the following parameters: ', req.query);
   let wrapperObj = {product_id: productId};
-  console.log('hi')
   getQuestions(client, productId, req.query.page, req.query.count)
     .then(results => {
-      console.log('results: ', results)
       let questionObj = results.map((val) => {
         val.question_date = new Date(parseInt(val.date)).toISOString();
         val.reported = Boolean(parseInt(val.reported)) ? true : false;
