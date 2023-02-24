@@ -17,8 +17,8 @@ app.get('/', (req, res) => {
   res.send('hi');
 })
 
-app.get('/loaderio-2d3782bad4f2b16af6678893db334fe7.txt', (req, res) => {
-  res.sendFile('/home/ubuntu/qna/server/loaderio-2d3782bad4f2b16af6678893db334fe7.txt');
+app.get('/loaderio-3727de9c2b38e300d3a91359ecc3afb1.txt', (req, res) => {
+  res.sendFile('/home/ubuntu/qna/server/loaderio-3727de9c2b38e300d3a91359ecc3afb1.txt');
 })
 // GET '/qa/questions' => requires product_id, page, count
 //   Should return 200 if it was completed
