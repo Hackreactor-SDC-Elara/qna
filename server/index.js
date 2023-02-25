@@ -19,6 +19,10 @@ app.get('/', (req, res) => {
 app.get('/loaderio-3727de9c2b38e300d3a91359ecc3afb1.txt', (req, res) => {
   res.sendFile('/home/ubuntu/qna/server/loaderio-3727de9c2b38e300d3a91359ecc3afb1.txt');
 })
+
+app.get('/loaderio-059b4cfd181734f0bf4f8c4b1fa5ebe1.txt', (req, res) => {
+  res.sendFile('/home/ubuntu/qna/server/loaderio-059b4cfd181734f0bf4f8c4b1fa5ebe1.txt')
+})
 // GET '/qa/questions' => requires product_id, page, count
 //   Should return 200 if it was completed
 app.get('/qa/questions', (req, res) => {
