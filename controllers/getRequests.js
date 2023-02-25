@@ -21,17 +21,6 @@ let getQuestions = async (db, productId, page, count = 5) => {
   let finalResult;
   let questionResult = await getQuestionsFromDB(db, productId, page, count);
 
-  if (questionResult.length !== 0) {
-    let answersIDs = [];
-    for (let i = 0; i < questionResult.length ; i++) {
-      for (let y = 0; y < questionResult[i].answers.length; y++) {
-        answersIDs.push(questionResult[i].answers[y].id);
-      }
-    }
-    let photosResult = await getPhotosFromDB(db, answersIDs);
-  }
-
-
   for (let i = 0 ; i < questionResult.length ; i++) {
     let answers = {};
     let answersList = questionResult[i].answers;
