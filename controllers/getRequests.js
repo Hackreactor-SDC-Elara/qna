@@ -21,19 +21,19 @@ let getQuestions = async (db, productId, page, count = 5) => {
   let finalResult;
   let questionResult = await getQuestionsFromDB(db, productId, page, count);
 
-  // for (let i = 0 ; i < questionResult.length ; i++) {
-  //   let answers = {};
-  //   let answersList = questionResult[i].answers;
-  //   for (let y = 0; y < answersList.length ; y++) {
-  //     answersList[y].photos = [questionResult[i].answers[y].photos.url];
-  //     while (answersList[y].id === answersList?.[y + 1]?.id) {
-  //       let removed = answersList.splice(y+1, 1);
-  //       answersList[y].photos.push(removed[0].photos.url);
-  //     }
-  //     answers[answersList[y].id] = answersList[y];
-  //   }
-  //   questionResult[i].answers = answers;
-  // }
+  for (let i = 0 ; i < questionResult.length ; i++) {
+    let answers = {};
+    let answersList = questionResult[i].answers;
+    for (let y = 0; y < answersList.length ; y++) {
+      answersList[y].photos = [questionResult[i].answers[y].photos.url];
+      while (answersList[y].id === answersList?.[y + 1]?.id) {
+        let removed = answersList.splice(y+1, 1);
+        answersList[y].photos.push(removed[0].photos.url);
+      }
+      answers[answersList[y].id] = answersList[y];
+    }
+    questionResult[i].answers = answers;
+  }
 
 
 
