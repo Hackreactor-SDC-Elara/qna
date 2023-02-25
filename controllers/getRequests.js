@@ -20,7 +20,6 @@ let getQuestions = async (db, productId, page, count = 5) => {
 
   let finalResult;
   let questionResult = await getQuestionsFromDB(db, productId, page, count);
-  // console.log(questionResult);
 
   if (questionResult.length !== 0) {
     let answersIDs = [];

@@ -17,7 +17,6 @@ let getQuestionsFromDB = (db, productId, page, count) => {
 // GROUP BY q.question_id \
 // ORDER BY q.helpfulness \
 // DESC LIMIT $2";
-console.log(count)
 let query = "SELECT q.question_id, q.body as question_body, q.date as question_date, q.helpfulness as question_helpfulness, q.reported, \
 (SELECT u.name FROM users u WHERE u.user_id = q.user_id), \
 json_AGG(JSON_BUILD_OBJECT('id', a.answer_id, 'body', a.body, 'date', a.date, 'answerer_name', (SELECT u.name FROM users u WHERE u.user_id = a.user_id), 'helpfulness', a.helpfulness, 'photos', JSON_BUILD_OBJECT('url', p.url))) \
