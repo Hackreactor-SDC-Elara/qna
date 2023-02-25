@@ -13,7 +13,6 @@ app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 
 app.get('/', (req, res) => {
-  console.log('User has landed!');
   res.send('hi');
 })
 
@@ -22,7 +21,7 @@ app.get('/loaderio-3727de9c2b38e300d3a91359ecc3afb1.txt', (req, res) => {
 })
 // GET '/qa/questions' => requires product_id, page, count
 //   Should return 200 if it was completed
-app.get('/qa/questions', async (req, res) => {
+app.get('/qa/questions', (req, res) => {
   req.query.page = req.query.page ?? 1;
   let productId = req.query.product_id;
   // console.log('User has requested question information with the following parameters: ', req.query);
@@ -30,7 +29,7 @@ app.get('/qa/questions', async (req, res) => {
   getQuestions(client, productId, req.query.page, req.query.count)
     .then(results => {
       let questionObj = results.map((val) => {
-        val.question_date = new Date(parseInt(val.date)).toISOString();
+        val.question_date = new Date(parseInt(val.question_date)).toISOString();
         val.reported = Boolean(parseInt(val.reported)) ? true : false;
 
         return {
@@ -39,7 +38,7 @@ app.get('/qa/questions', async (req, res) => {
           question_date: val.question_date,
           asker_name: val.asker_name,
           question_helpfulness: val.question_helpfulness,
-          reported:  Boolean(parseInt(val.reported)) ? true : false,
+          reported:  Boolean(parseInt(val.reported)),
           answers: val.answers
         }
       });

@@ -17,85 +17,39 @@ let getQuestions = async (db, productId, page, count = 5) => {
   if (typeof parseInt(productId) !== 'number' || parseFloat(productId) !== parseInt(productId)) {
     throw new Error('ProductId must be an integer');
   }
-  db = await db.connect();
-  let results = [];
+
   let finalResult;
-  try {
-    await db.query('BEGIN');
-    let questionResult = await getQuestionsFromDB(db, productId, page, count);
-    results.push(questionResult);
-    if (questionResult.length === 0) {
-      results.push({rows:[]});
-    } else {
-      let answersResult = await getAnswersFromDB(db, results[0]);
-      results.push(answersResult);
-    }
+  let questionResult = await getQuestionsFromDB(db, productId, page, count);
+  // console.log(questionResult);
 
-    if (results[1].rows.length === 0) {
-      results.push({rows:[]});
-    } else {
-      let photosResult = await getPhotosFromDB(db, results[1].rows);
-      results.push(photosResult);
-    }
-
-    let product_answer = {};
-
-    results[1].rows.map((val, idx) => {
-      if (product_answer[val.question_id] === undefined) {
-        product_answer[val.question_id] = [idx];
-      } else {
-        product_answer[val.question_id].push(idx);
-      }
-    });
-
-    let foundQuestions = Object.keys(product_answer);
-
-    let thisThing = JSON.parse(JSON.stringify(results[0]));
-
-    for (let i = 0; i < thisThing.length; i++) {
-      let question_id = thisThing[i]['question_id'];
-      thisThing[i].answers = {};
-      if (foundQuestions.includes(question_id.toString())) {
-        let answerIdx = product_answer[question_id.toString()];
-        for (let j = 0 ; j < answerIdx.length; j++) {
-          let answerId = results[1].rows[answerIdx[j]].answer_id;
-          let transformObject = (obj) => {
-            // Transforming the answer object information
-            obj.id = obj.answer_id;
-            obj.answerer_name = obj.name;
-            obj.date = new Date(parseInt(obj.date)).toISOString();
-            obj.photos = [];
-            results[2].rows.map(val => {
-              if (val.answer_id === obj.id.toString()) {
-                obj.photos.push(val.url);
-              }
-            });
-
-            // Deleting irrelevant key value pairs
-            delete obj.answer_id;
-            delete obj.name;
-            delete obj.question_id;
-          }
-
-          // Transforming the question object to have the right shape
-          transformObject(results[1].rows[answerIdx[j]]);
-
-          // Assigning the answers object to the question object
-          thisThing[i]['answers'][answerId] = results[1].rows[answerIdx[j]];
-        }
+  if (questionResult.length !== 0) {
+    let answersIDs = [];
+    for (let i = 0; i < questionResult.length ; i++) {
+      for (let y = 0; y < questionResult[i].answers.length; y++) {
+        answersIDs.push(questionResult[i].answers[y].id);
       }
     }
-    finalResult = thisThing;
-
-    await db.query('COMMIT');
-  } catch (e) {
-    await db.query('ROLLBACK');
-    throw e;
-  } finally {
-    await db.release();
+    let photosResult = await getPhotosFromDB(db, answersIDs);
   }
 
-  return finalResult;
+
+  for (let i = 0 ; i < questionResult.length ; i++) {
+    let answers = {};
+    let answersList = questionResult[i].answers;
+    for (let y = 0; y < answersList.length ; y++) {
+      answersList[y].photos = [questionResult[i].answers[y].photos.url];
+      while (answersList[y].id === answersList?.[y + 1]?.id) {
+        let removed = answersList.splice(y+1, 1);
+        answersList[y].photos.push(removed[0].photos.url);
+      }
+      answers[answersList[y].id] = answersList[y];
+    }
+    questionResult[i].answers = answers;
+  }
+
+
+
+  return questionResult;
 };
 
 let getAnswers = async (db, questionId, page = 0, count = 5) => {
@@ -106,12 +60,8 @@ let getAnswers = async (db, questionId, page = 0, count = 5) => {
   if (typeof parseInt(questionId) !== 'number' || parseFloat(questionId) !== parseInt(questionId)) {
     throw new Error('questionId must be an integer');
   }
-  db = await db.connect();
   let results = [];
   let finalResult;
-  try {
-    await db.query('BEGIN');
-
     let answerResult = await getAnswersFromDBAnswersRequest(db, questionId, page, count);
     results.push(answerResult.rows);
 
@@ -138,13 +88,6 @@ let getAnswers = async (db, questionId, page = 0, count = 5) => {
     }
 
     finalResult = results[0];
-    await db.query('COMMIT');
-  } catch(e) {
-    await db.query('ROLLBACK');
-    throw e;
-  } finally {
-    db.release();
-  }
 
   return finalResult;
 };
